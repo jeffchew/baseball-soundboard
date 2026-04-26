@@ -5,7 +5,20 @@ import audioEngine from '../utils/audioEngine';
 export default function LineupTab({ isPlaying, setIsPlaying }) {
   const [isSequencing, setIsSequencing] = useState(false);
   const [currentPlayerIndex, setCurrentPlayerIndex] = useState(-1);
+  const [enabledPlayers, setEnabledPlayers] = useState(
+    audioConfig.walkups.reduce((acc, player) => {
+      acc[player.id] = true; // All players enabled by default
+      return acc;
+    }, {})
+  );
   const stopRequested = useRef(false);
+
+  const togglePlayer = (playerId) => {
+    setEnabledPlayers(prev => ({
+      ...prev,
+      [playerId]: !prev[playerId]
+    }));
+  };
 
   const handlePlayerClick = (player) => {
     if (isPlaying) return;
@@ -63,7 +76,8 @@ export default function LineupTab({ isPlaying, setIsPlaying }) {
 
     await new Promise((resolve) => {
       lakeAudio.onended = resolve;
-      setTimeout(resolve, 30000);
+      // Fallback timeout in case onended doesn't fire
+      setTimeout(() => resolve(), 30000);
     });
 
     // Check if stop was requested
@@ -76,14 +90,23 @@ export default function LineupTab({ isPlaying, setIsPlaying }) {
 
     await new Promise((resolve) => setTimeout(resolve, 2000));
 
-    // Play each player intro from pregame folder
-    const playerIntros = audioConfig.pregame.filter(p => 
-      p.id.startsWith('intro-') && 
-      !p.id.includes('monsters') && 
+    // Play each player intro from pregame folder (only enabled players)
+    const allPlayerIntros = audioConfig.pregame.filter(p =>
+      p.id.startsWith('intro-') &&
+      !p.id.includes('monsters') &&
       !p.id.includes('end')
     );
 
-    for (let i = 0; i < playerIntros.length; i++) {
+    // Create array of enabled player intros with their original indices
+    const playerIntrosWithIndices = allPlayerIntros
+      .map((intro, index) => ({
+        intro,
+        originalIndex: index,
+        walkupPlayer: audioConfig.walkups[index]
+      }))
+      .filter(item => item.walkupPlayer && enabledPlayers[item.walkupPlayer.id]);
+
+    for (let i = 0; i < playerIntrosWithIndices.length; i++) {
       // Check if stop was requested
       if (stopRequested.current) {
         audioEngine.stopBackground();
@@ -92,8 +115,8 @@ export default function LineupTab({ isPlaying, setIsPlaying }) {
         return;
       }
 
-      setCurrentPlayerIndex(i);
-      const intro = playerIntros[i];
+      const { intro, originalIndex } = playerIntrosWithIndices[i];
+      setCurrentPlayerIndex(originalIndex);
       
       // Play player intro
       const audio = audioEngine.play(intro.file, {
@@ -105,7 +128,8 @@ export default function LineupTab({ isPlaying, setIsPlaying }) {
       // Wait for audio to finish
       await new Promise((resolve) => {
         audio.onended = resolve;
-        setTimeout(resolve, 30000);
+        // Fallback timeout in case onended doesn't fire
+        setTimeout(() => resolve(), 30000);
       });
 
       // Check if stop was requested
@@ -139,11 +163,12 @@ export default function LineupTab({ isPlaying, setIsPlaying }) {
 
     await new Promise((resolve) => {
       endAudio.onended = resolve;
-      setTimeout(resolve, 30000);
+      // Fallback timeout in case onended doesn't fire
+      setTimeout(() => resolve(), 30000);
     });
 
-    // Stop background music
-    audioEngine.stopBackground();
+    // Sequence complete - keep background music playing
+    // User can stop it manually with the STOP button
     audioEngine.clearSequenceStopCallback();
     setIsSequencing(false);
     setCurrentPlayerIndex(-1);
@@ -151,7 +176,14 @@ export default function LineupTab({ isPlaying, setIsPlaying }) {
 
   const handleStopSequence = () => {
     stopRequested.current = true;
-    audioEngine.stop();
+    
+    // Force stop any currently playing audio immediately
+    if (audioEngine.activeAudio) {
+      audioEngine.activeAudio.pause();
+      audioEngine.activeAudio.currentTime = 0;
+      audioEngine.activeAudio = null;
+    }
+    
     audioEngine.stopBackground();
     audioEngine.clearSequenceStopCallback();
     setIsSequencing(false);
@@ -182,21 +214,50 @@ export default function LineupTab({ isPlaying, setIsPlaying }) {
       {/* Player Grid */}
       <div className="grid grid-cols-2 gap-4">
         {audioConfig.walkups.map((player, index) => (
-          <button
-            key={player.id}
-            onClick={() => handlePlayerClick(player)}
-            disabled={isSequencing || isPlaying}
-            className={`p-6 rounded-lg shadow-lg transition-all duration-200 ${
-              currentPlayerIndex === index
-                ? 'bg-green-600 text-white scale-105'
-                : isSequencing || isPlaying
-                ? 'bg-yankee-gray text-yankee-light cursor-not-allowed opacity-50'
-                : 'bg-yankee-slate hover:bg-yankee-gray text-white'
-            }`}
-          >
-            <div className="text-4xl font-bold mb-2">#{player.number}</div>
-            <div className="text-lg font-semibold">{player.label}</div>
-          </button>
+          <div key={player.id} className="relative">
+            {/* Enable/Disable Checkbox - positioned above button */}
+            <div
+              className="absolute top-2 right-2 z-10 pointer-events-auto"
+              onMouseDown={(e) => e.stopPropagation()}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <label
+                className="flex items-center cursor-pointer p-2 -m-2 bg-yankee-navy rounded"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <input
+                  type="checkbox"
+                  checked={enabledPlayers[player.id]}
+                  onChange={(e) => {
+                    e.stopPropagation();
+                    togglePlayer(player.id);
+                  }}
+                  onClick={(e) => e.stopPropagation()}
+                  disabled={isSequencing}
+                  className="w-7 h-7 sm:w-6 sm:h-6 rounded border-2 border-white bg-yankee-navy checked:bg-blue-600 checked:border-blue-600 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed pointer-events-auto"
+                />
+              </label>
+            </div>
+            
+            {/* Player Button */}
+            <button
+              onClick={() => handlePlayerClick(player)}
+              disabled={isSequencing || isPlaying || !enabledPlayers[player.id]}
+              className={`w-full p-6 rounded-lg shadow-lg transition-all duration-200 ${
+                currentPlayerIndex === index
+                  ? 'bg-green-600 text-white scale-105'
+                  : !enabledPlayers[player.id]
+                  ? 'bg-yankee-gray text-yankee-light opacity-40'
+                  : isSequencing || isPlaying
+                  ? 'bg-yankee-gray text-yankee-light cursor-not-allowed opacity-50'
+                  : 'bg-yankee-slate hover:bg-yankee-gray text-white'
+              }`}
+              style={{ pointerEvents: isSequencing || isPlaying || !enabledPlayers[player.id] ? 'none' : 'auto' }}
+            >
+              <div className="text-4xl font-bold mb-2">#{player.number}</div>
+              <div className="text-lg font-semibold">{player.label}</div>
+            </button>
+          </div>
         ))}
       </div>
     </div>
