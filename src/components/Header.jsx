@@ -27,7 +27,7 @@ export default function Header({ activeTab, setActiveTab }) {
               onClick={handleInitialize}
               className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg shadow-lg transition-colors duration-200"
             >
-              🔊 Initialize Audio
+              🔊 Initialize Audio (iPhone Users)
             </button>
           </div>
         )}

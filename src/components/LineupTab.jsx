@@ -12,6 +12,7 @@ export default function LineupTab({ isPlaying, setIsPlaying }) {
     }, {})
   );
   const stopRequested = useRef(false);
+  const sequenceId = useRef(0); // Track sequence instances
 
   const togglePlayer = (playerId) => {
     setEnabledPlayers(prev => ({
@@ -35,6 +36,10 @@ export default function LineupTab({ isPlaying, setIsPlaying }) {
   const startLineupSequence = async () => {
     if (isSequencing) return;
     
+    // Increment sequence ID to invalidate any previous sequences
+    sequenceId.current += 1;
+    const currentSequenceId = sequenceId.current;
+    
     // Stop any currently playing audio first
     audioEngine.stop();
     audioEngine.stopBackground();
@@ -57,8 +62,13 @@ export default function LineupTab({ isPlaying, setIsPlaying }) {
     // Wait 15 seconds for background music to play before starting voiceovers
     await new Promise((resolve) => setTimeout(resolve, 15000));
 
-    // Check if stop was requested
-    if (stopRequested.current) {
+    // Check if stop was requested or sequence was superseded
+    if (stopRequested.current || sequenceId.current !== currentSequenceId) {
+      // If superseded by a new sequence, just exit silently without stopping audio
+      if (sequenceId.current !== currentSequenceId) {
+        return;
+      }
+      // If manually stopped, clean up audio
       audioEngine.stopBackground();
       setIsSequencing(false);
       setCurrentPlayerIndex(-1);
@@ -80,8 +90,13 @@ export default function LineupTab({ isPlaying, setIsPlaying }) {
       setTimeout(() => resolve(), 30000);
     });
 
-    // Check if stop was requested
-    if (stopRequested.current) {
+    // Check if stop was requested or sequence was superseded
+    if (stopRequested.current || sequenceId.current !== currentSequenceId) {
+      // If superseded by a new sequence, just exit silently without stopping audio
+      if (sequenceId.current !== currentSequenceId) {
+        return;
+      }
+      // If manually stopped, clean up audio
       audioEngine.stopBackground();
       setIsSequencing(false);
       setCurrentPlayerIndex(-1);
@@ -107,8 +122,13 @@ export default function LineupTab({ isPlaying, setIsPlaying }) {
       .filter(item => item.walkupPlayer && enabledPlayers[item.walkupPlayer.id]);
 
     for (let i = 0; i < playerIntrosWithIndices.length; i++) {
-      // Check if stop was requested
-      if (stopRequested.current) {
+      // Check if stop was requested or sequence was superseded
+      if (stopRequested.current || sequenceId.current !== currentSequenceId) {
+        // If superseded by a new sequence, just exit silently without stopping audio
+        if (sequenceId.current !== currentSequenceId) {
+          return;
+        }
+        // If manually stopped, clean up audio
         audioEngine.stopBackground();
         setIsSequencing(false);
         setCurrentPlayerIndex(-1);
@@ -132,8 +152,13 @@ export default function LineupTab({ isPlaying, setIsPlaying }) {
         setTimeout(() => resolve(), 30000);
       });
 
-      // Check if stop was requested
-      if (stopRequested.current) {
+      // Check if stop was requested or sequence was superseded
+      if (stopRequested.current || sequenceId.current !== currentSequenceId) {
+        // If superseded by a new sequence, just exit silently without stopping audio
+        if (sequenceId.current !== currentSequenceId) {
+          return;
+        }
+        // If manually stopped, clean up audio
         audioEngine.stopBackground();
         setIsSequencing(false);
         setCurrentPlayerIndex(-1);
@@ -144,8 +169,13 @@ export default function LineupTab({ isPlaying, setIsPlaying }) {
       await new Promise((resolve) => setTimeout(resolve, 2000));
     }
 
-    // Check if stop was requested
-    if (stopRequested.current) {
+    // Check if stop was requested or sequence was superseded
+    if (stopRequested.current || sequenceId.current !== currentSequenceId) {
+      // If superseded by a new sequence, just exit silently without stopping audio
+      if (sequenceId.current !== currentSequenceId) {
+        return;
+      }
+      // If manually stopped, clean up audio
       audioEngine.stopBackground();
       setIsSequencing(false);
       setCurrentPlayerIndex(-1);
