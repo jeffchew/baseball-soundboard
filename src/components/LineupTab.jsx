@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useMemo } from 'react';
 import { audioConfig } from '../config';
 import audioEngine from '../utils/audioEngine';
 import { useAudioCache } from '../hooks/useAudioCache';
@@ -15,6 +15,15 @@ export default function LineupTab({ isPlaying, setIsPlaying }) {
   );
   const stopRequested = useRef(false);
   const sequenceId = useRef(0); // Track sequence instances
+  const [selectedPregameSongId, setSelectedPregameSongId] = useState('song4');
+  const [isPregameMusicExpanded, setIsPregameMusicExpanded] = useState(false);
+  const pregameBackgroundOptions = useMemo(
+    () => audioConfig.pregameBackgroundOptions ?? [],
+    []
+  );
+  const selectedPregameSong =
+    pregameBackgroundOptions.find((song) => song.id === selectedPregameSongId) ??
+    pregameBackgroundOptions[0];
 
   const togglePlayer = (playerId) => {
     setEnabledPlayers(prev => ({
@@ -55,11 +64,13 @@ export default function LineupTab({ isPlaying, setIsPlaying }) {
       stopRequested.current = true;
     });
 
-    // Find Baba O'Riley for background music
-    const babaORiley = audioConfig.songs.find(song => song.id === 'song4');
-    
-    // Start background music (Baba O'Riley) at 30 seconds at moderate volume
-    audioEngine.playBackground(babaORiley.file, 0.35, 30);
+    if (selectedPregameSong) {
+      audioEngine.playBackground(
+        selectedPregameSong.file,
+        0.35,
+        selectedPregameSong.startTime ?? 0
+      );
+    }
 
     // Wait 15 seconds for background music to play before starting voiceovers
     await new Promise((resolve) => setTimeout(resolve, 15000));
@@ -224,22 +235,79 @@ export default function LineupTab({ isPlaying, setIsPlaying }) {
 
   return (
     <div className="p-4 pb-24">
-      {/* Start Lineup Button */}
       <div className="mb-6">
-        {!isSequencing ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          {!isSequencing ? (
+            <button
+              onClick={startLineupSequence}
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-6 rounded-lg shadow-lg transition-colors duration-200 text-lg"
+            >
+              🎤 Start Pregame Intro
+            </button>
+          ) : (
+            <button
+              onClick={handleStopSequence}
+              className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-4 px-6 rounded-lg shadow-lg transition-colors duration-200 text-lg"
+            >
+              ⏹ Stop Pregame Intro
+            </button>
+          )}
+
           <button
-            onClick={startLineupSequence}
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-6 rounded-lg shadow-lg transition-colors duration-200 text-lg"
+            type="button"
+            onClick={() => setIsPregameMusicExpanded((prev) => !prev)}
+            disabled={isSequencing}
+            className={`w-full rounded-lg shadow-lg font-bold py-4 px-6 transition-colors duration-200 text-lg ${
+              isSequencing
+                ? 'bg-yankee-gray text-yankee-light cursor-not-allowed opacity-70'
+                : 'bg-yankee-slate hover:bg-yankee-gray text-white'
+            }`}
           >
-            🎤 Start Pregame Intro
+            🎵 Change Intro Music
           </button>
-        ) : (
-          <button
-            onClick={handleStopSequence}
-            className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-4 px-6 rounded-lg shadow-lg transition-colors duration-200 text-lg"
-          >
-            ⏹ Stop Pregame Intro
-          </button>
+        </div>
+
+        {isPregameMusicExpanded && (
+          <div className="mt-3 bg-yankee-slate rounded-lg shadow-lg overflow-hidden">
+            <div className="p-4 pb-3 border-b border-yankee-gray">
+              <h2 className="text-white font-bold text-lg">Pregame Background Music</h2>
+              <p className="text-yankee-light text-sm">
+                Selected: {selectedPregameSong?.label ?? 'None'}
+              </p>
+            </div>
+            <div className="p-4 pt-3">
+              <p className="text-yankee-light text-sm mb-3">
+                Choose the song that plays underneath the pregame intro sequence.
+              </p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {pregameBackgroundOptions.map((song) => (
+                  <button
+                    key={song.id}
+                    type="button"
+                    onClick={() => {
+                      setSelectedPregameSongId(song.id);
+                      setIsPregameMusicExpanded(false);
+                    }}
+                    disabled={isSequencing}
+                    className={`rounded-lg border px-4 py-3 text-left transition-all duration-200 ${
+                      selectedPregameSongId === song.id
+                        ? 'border-blue-400 bg-blue-600 text-white'
+                        : isSequencing
+                        ? 'border-yankee-gray bg-yankee-gray text-yankee-light cursor-not-allowed opacity-60'
+                        : 'border-yankee-gray bg-yankee-navy text-white hover:border-blue-400 hover:bg-yankee-gray'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between gap-3">
+                      <span className="font-semibold">{song.label}</span>
+                      {selectedPregameSongId === song.id && (
+                        <span className="text-sm font-bold">Selected</span>
+                      )}
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
         )}
       </div>
 

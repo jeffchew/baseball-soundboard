@@ -18,6 +18,7 @@ export default function PreloadAudio() {
     audioConfig.walkups.forEach(item => audioFiles.push(item.file));
     audioConfig.sounds.forEach(item => audioFiles.push(item.file));
     audioConfig.songs.forEach(item => audioFiles.push(item.file));
+    audioConfig.pregameBackgroundOptions?.forEach(item => audioFiles.push(item.file));
     audioConfig.pregame.forEach(item => audioFiles.push(item.file));
 
     // Remove duplicates (some files appear in multiple categories)

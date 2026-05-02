@@ -93,6 +93,17 @@ export const audioConfig = {
     { id: 'song46', label: 'You Shook Me All Night Long', file: '/audio/songs/You Shook Me All Night Long.mp3', startTime: 0, fadeIn: true },
   ],
 
+  // Selectable background music for pregame intro sequence
+  pregameBackgroundOptions: [
+    { id: 'song4', label: "Baba O'Riley", file: '/audio/songs/Baba O_Riley.mp3', startTime: 30, fadeIn: true },
+    { id: 'song15', label: 'Eye of the Tiger', file: '/audio/songs/Eye of the Tiger.mp3', startTime: 0, fadeIn: true },
+    { id: 'song5', label: 'Back In Black', file: '/audio/songs/Back In Black.mp3', startTime: 5, fadeIn: true },
+    { id: 'song37', label: 'The Imperial March', file: '/audio/songs/The Imperial March.mp3', startTime: 0, fadeIn: true },
+    { id: 'song44', label: 'Welcome To The Jungle', file: '/audio/songs/Welcome To The Jungle.mp3', startTime: 0, fadeIn: true },
+    { id: 'song39', label: 'Thunderstruck', file: '/audio/songs/Thunderstruck.mp3', startTime: 0, fadeIn: true },
+    { id: 'song21', label: 'Jump Around', file: '/audio/songs/Jump Around.mp3', startTime: 0, fadeIn: true },
+  ],
+
   // Background loops for pregame announcements (player intros)
   pregame: [
     { id: 'intro-zaro', label: 'Gabriel Zaro Intro', file: '/audio/pregame/Intro 01 Gabriel Zaro.mp3', startTime: 0, fadeIn: true },
