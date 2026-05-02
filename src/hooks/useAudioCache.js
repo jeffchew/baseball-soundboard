@@ -18,9 +18,21 @@ export function useAudioCache() {
           const requests = await cache.keys();
           
           // Extract file paths from cache requests
+          // Normalize paths by removing query strings and ensuring consistent format
           const paths = requests.map(request => {
             const url = new URL(request.url);
-            return url.pathname;
+            // Get pathname and remove any query strings
+            let path = url.pathname;
+            
+            // Decode URL encoding (e.g., %20 -> space)
+            path = decodeURIComponent(path);
+            
+            // Normalize the path - ensure it starts with /
+            if (!path.startsWith('/')) {
+              path = '/' + path;
+            }
+            
+            return path;
           });
           
           setCachedFiles(new Set(paths));
@@ -43,7 +55,17 @@ export function useAudioCache() {
    * @returns {boolean} True if the file is cached
    */
   const isCached = (filePath) => {
-    return cachedFiles.has(filePath);
+    // Normalize the input path
+    let normalizedPath = filePath;
+    if (!normalizedPath.startsWith('/')) {
+      normalizedPath = '/' + normalizedPath;
+    }
+    
+    // Decode URL encoding to match cached paths
+    normalizedPath = decodeURIComponent(normalizedPath);
+    
+    // Check if the normalized path exists in cache
+    return cachedFiles.has(normalizedPath);
   };
 
   return {
