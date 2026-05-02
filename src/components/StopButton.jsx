@@ -19,4 +19,4 @@ export default function StopButton({ setIsPlaying }) {
   );
 }
 
-// Made with Bob
+
