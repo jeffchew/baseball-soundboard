@@ -94,6 +94,7 @@ export default function PreloadAudio() {
           onClick={preloadAudio}
           className="w-full flex items-center justify-center gap-2 font-bold"
         >
+          <img src="/lake monsters logo.png" alt="Lake Monsters Logo" className="h-6 w-6 mr-2" />
           <span>📥</span>
           <span>Preload All Audio for Offline Use</span>
         </button>
@@ -117,5 +118,3 @@ export default function PreloadAudio() {
     </div>
   );
 }
-
-

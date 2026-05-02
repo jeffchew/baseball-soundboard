@@ -90,18 +90,25 @@ export default function Header({ activeTab, setActiveTab }) {
 
         {/* Preload Button */}
         {showPreloadButton && (
-          <div className="mb-3">
-            <button
-              onClick={handlePreload}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg shadow-lg transition-colors duration-200"
-            >
-              📥 Preload All Audio for Offline Use
-            </button>
-            {audioCacheCount > 0 && (
-              <div className="mt-2 text-center text-sm text-blue-300">
-                {audioCacheCount} files already cached
-              </div>
-            )}
+          <div className="mb-3 flex items-center gap-3">
+            <img
+              src="/lake-monsters-logo.png"
+              alt="Lake Monsters Logo"
+              className="h-12 w-auto flex-shrink-0"
+            />
+            <div className="flex-1">
+              <button
+                onClick={handlePreload}
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg shadow-lg transition-colors duration-200"
+              >
+                📥 Preload All Audio for Offline Use
+              </button>
+              {audioCacheCount > 0 && (
+                <div className="mt-2 text-center text-sm text-blue-300">
+                  {audioCacheCount} files already cached
+                </div>
+              )}
+            </div>
           </div>
         )}
 
@@ -125,31 +132,39 @@ export default function Header({ activeTab, setActiveTab }) {
         )}
 
         {showOfflineReady && (
-          <div className="mb-3 bg-green-600 text-white rounded-lg p-4 shadow-lg">
-            <div className="flex items-center justify-between">
-              <div className="flex-1">
-                <div className="flex items-center justify-center gap-2 font-bold mb-1">
-                  <span>📶</span>
-                  <span>Offline Ready</span>
-                  <span className="relative flex h-2 w-2">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
-                    <span className="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
-                  </span>
+          <div className="mb-3 flex items-center gap-3">
+            <img
+              src="/lake-monsters-logo.png"
+              alt="Lake Monsters Logo"
+              className="h-12 w-auto flex-shrink-0"
+            />
+            <div className="flex-1 bg-green-600 text-white rounded-lg p-4 shadow-lg">
+              <div className="flex items-center justify-between">
+                <div className="flex-1">
+                  <div className="flex items-center justify-center gap-2 font-bold mb-1">
+                    <span>📶</span>
+                    <span>Offline Ready</span>
+                    <span className="relative flex h-2 w-2">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
+                    </span>
+                  </div>
+                  <div className="text-center text-sm opacity-90">
+                    {audioCacheCount} audio files cached • Ready for game day!
+                  </div>
                 </div>
-                <div className="text-center text-sm opacity-90">
-                  {audioCacheCount} audio files cached • Ready for game day!
-                </div>
+                <button
+                  onClick={handleClearCache}
+                  className="ml-3 text-xs bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded transition-colors"
+                  title="Clear cached audio files"
+                >
+                  🗑️ Clear
+                </button>
               </div>
-              <button
-                onClick={handleClearCache}
-                className="ml-3 text-xs bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded transition-colors"
-                title="Clear cached audio files"
-              >
-                🗑️ Clear
-              </button>
             </div>
           </div>
         )}
+
 
         {/* Tab Navigation */}
         <div className="flex gap-2">
