@@ -1,7 +1,7 @@
 {
-  "name": "Baseball Soundboard",
-  "short_name": "Soundboard",
-  "description": "Youth Baseball Soundboard",
+  "name": "Lake Monsters DJ App",
+  "short_name": "LakeMonstersDJApp",
+  "description": "DJ App / Soundboard for the New York Lake Monsters",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#001c43",
