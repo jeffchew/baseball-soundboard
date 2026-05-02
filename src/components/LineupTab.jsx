@@ -1,8 +1,10 @@
 import { useState, useRef } from 'react';
 import { audioConfig } from '../config';
 import audioEngine from '../utils/audioEngine';
+import { useAudioCache } from '../hooks/useAudioCache';
 
 export default function LineupTab({ isPlaying, setIsPlaying }) {
+  const { isCached } = useAudioCache();
   const [isSequencing, setIsSequencing] = useState(false);
   const [currentPlayerIndex, setCurrentPlayerIndex] = useState(-1);
   const [enabledPlayers, setEnabledPlayers] = useState(
@@ -273,7 +275,7 @@ export default function LineupTab({ isPlaying, setIsPlaying }) {
             <button
               onClick={() => handlePlayerClick(player)}
               disabled={isSequencing || isPlaying || !enabledPlayers[player.id]}
-              className={`w-full p-6 rounded-lg shadow-lg transition-all duration-200 ${
+              className={`relative w-full p-6 rounded-lg shadow-lg transition-all duration-200 ${
                 currentPlayerIndex === index
                   ? 'bg-green-600 text-white scale-105'
                   : !enabledPlayers[player.id]
@@ -284,6 +286,9 @@ export default function LineupTab({ isPlaying, setIsPlaying }) {
               }`}
               style={{ pointerEvents: isSequencing || isPlaying || !enabledPlayers[player.id] ? 'none' : 'auto' }}
             >
+              {isCached(player.file) && (
+                <div className="absolute bottom-2 left-2 w-2 h-2 bg-green-400 rounded-full" title="Cached for offline use" />
+              )}
               <div className="text-4xl font-bold mb-2">#{player.number}</div>
               <div className="text-lg font-semibold">{player.label}</div>
             </button>
