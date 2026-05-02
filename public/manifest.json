@@ -1,6 +1,6 @@
 {
-  "name": "Lake Monsters DJ App",
-  "short_name": "LakeMonstersDJApp",
+  "name": "Lake Monsters DJ",
+  "short_name": "Lake Monsters",
   "description": "DJ App / Soundboard for the New York Lake Monsters",
   "start_url": "/",
   "display": "standalone",
