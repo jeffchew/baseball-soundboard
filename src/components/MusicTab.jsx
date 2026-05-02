@@ -2,13 +2,14 @@ import { audioConfig } from '../config';
 import audioEngine from '../utils/audioEngine';
 import { useAudioCache } from '../hooks/useAudioCache';
 
-export default function MusicTab({ isPlaying, setIsPlaying }) {
+export default function MusicTab({ isPlaying, setIsPlaying, incrementPlayCount, getPlayCount }) {
   const { isCached } = useAudioCache();
 
   const handleSongClick = (song) => {
     if (isPlaying) return;
     
     setIsPlaying(true);
+    incrementPlayCount(song.id);
     const audio = audioEngine.play(song.file, {
       startTime: song.startTime,
       fadeIn: song.fadeIn,
@@ -36,7 +37,14 @@ export default function MusicTab({ isPlaying, setIsPlaying }) {
             >
               <div className="flex items-center">
                 <span className="text-3xl mr-4">🎵</span>
-                <span className="text-xl">{song.label}</span>
+                <div className="flex-1">
+                  <span className="text-xl">{song.label}</span>
+                  {getPlayCount(song.id) > 0 && (
+                    <span className="ml-3 text-sm text-yankee-light">
+                      ▶ {getPlayCount(song.id)}
+                    </span>
+                  )}
+                </div>
                 {cached && (
                   <div className="ml-auto w-2 h-2 bg-green-400 rounded-full flex-shrink-0" title="Cached for offline use" />
                 )}

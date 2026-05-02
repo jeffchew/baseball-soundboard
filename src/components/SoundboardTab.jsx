@@ -2,13 +2,14 @@ import { audioConfig } from '../config';
 import audioEngine from '../utils/audioEngine';
 import { useAudioCache } from '../hooks/useAudioCache';
 
-export default function SoundboardTab({ isPlaying, setIsPlaying }) {
+export default function SoundboardTab({ isPlaying, setIsPlaying, incrementPlayCount, getPlayCount }) {
   const { isCached } = useAudioCache();
 
   const handleSoundClick = (sound) => {
     if (isPlaying) return;
     
     setIsPlaying(true);
+    incrementPlayCount(sound.id);
     const audio = audioEngine.play(sound.file, {
       startTime: sound.startTime,
       fadeIn: sound.fadeIn,
@@ -38,6 +39,11 @@ export default function SoundboardTab({ isPlaying, setIsPlaying }) {
                 <div className="absolute top-2 right-2 w-2 h-2 bg-green-400 rounded-full" title="Cached for offline use" />
               )}
               <div className="text-xl">{sound.label}</div>
+              {getPlayCount(sound.id) > 0 && (
+                <div className="text-sm text-yankee-light mt-1">
+                  ▶ {getPlayCount(sound.id)}
+                </div>
+              )}
             </button>
           );
         })}

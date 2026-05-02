@@ -4,10 +4,12 @@ import LineupTab from './components/LineupTab';
 import SoundboardTab from './components/SoundboardTab';
 import MusicTab from './components/MusicTab';
 import StopButton from './components/StopButton';
+import { usePlayCount } from './hooks/usePlayCount';
 
 function App() {
   const [activeTab, setActiveTab] = useState('lineup');
   const [isPlaying, setIsPlaying] = useState(false);
+  const { incrementPlayCount, getPlayCount } = usePlayCount();
 
   return (
     <div className="min-h-screen bg-yankee-navy">
@@ -15,8 +17,8 @@ function App() {
       
       <main>
         {activeTab === 'lineup' && <LineupTab isPlaying={isPlaying} setIsPlaying={setIsPlaying} />}
-        {activeTab === 'soundboard' && <SoundboardTab isPlaying={isPlaying} setIsPlaying={setIsPlaying} />}
-        {activeTab === 'music' && <MusicTab isPlaying={isPlaying} setIsPlaying={setIsPlaying} />}
+        {activeTab === 'soundboard' && <SoundboardTab isPlaying={isPlaying} setIsPlaying={setIsPlaying} incrementPlayCount={incrementPlayCount} getPlayCount={getPlayCount} />}
+        {activeTab === 'music' && <MusicTab isPlaying={isPlaying} setIsPlaying={setIsPlaying} incrementPlayCount={incrementPlayCount} getPlayCount={getPlayCount} />}
       </main>
 
       <StopButton setIsPlaying={setIsPlaying} />
