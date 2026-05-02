@@ -68,7 +68,7 @@ export const audioConfig = {
     //{ id: 'song20b', label: "Steve's Lava Chicken (Extended)", file: '/audio/songs/Jack Black - Steve_s Lava Chicken (Extended Version).mp3', startTime: 0, fadeIn: true },
     { id: 'song21', label: 'Jump Around', file: '/audio/songs/Jump Around.mp3', startTime: 0, fadeIn: true },
     { id: 'song22', label: 'Kickstart My Heart', file: '/audio/songs/Kickstart My Heart.mp3', startTime: 0, fadeIn: true },
-    { id: 'song23', label: "Livin' on a Prayer", file: "/audio/songs/Livin' on a Prayer.mp3", startTime: 15, fadeIn: true },
+    { id: 'song23', label: "Livin' on a Prayer", file: "/audio/songs/Livin on a Prayer.mp3", startTime: 15, fadeIn: true },
     { id: 'song24', label: 'Lose Yourself', file: '/audio/songs/Lose Yourself.mp3', startTime: 30, fadeIn: true },
     { id: 'song25', label: 'New York Groove', file: '/audio/songs/New York Groove.mp3', startTime: 46, fadeIn: true },
     { id: 'song26', label: "No Sleep 'Til Brooklyn", file: '/audio/songs/No Sleep _Til Brooklyn.mp3', startTime: 0, fadeIn: true },
