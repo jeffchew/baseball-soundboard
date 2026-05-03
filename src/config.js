@@ -1,5 +1,8 @@
 // Audio configuration for the baseball soundboard
 export const audioConfig = {
+  // Pregame intro settings
+  pregameBackgroundVolume: 0.40, // Volume for background music during pregame intro (0.0 to 1.0)
+  
   // Player walk-up music (premixed ElevenLabs + music)
   walkups: [
     { id: 1, label: 'Gabriel Zaro', number: '1', file: '/audio/walkups/Walk up 01 Gabriel Zaro.mp3', startTime: 0, fadeIn: true },
@@ -131,21 +134,21 @@ export const audioConfig = {
 
   // Background loops for pregame announcements (player intros)
   pregame: [
-    { id: 'intro-zaro', label: 'Gabriel Zaro Intro', file: '/audio/pregame/Intro 01 Gabriel Zaro.mp3', startTime: 0, fadeIn: true },
-    { id: 'intro-ullrich', label: 'Henry Ullrich Intro', file: '/audio/pregame/Intro 02 Henry Ullrich.mp3', startTime: 0, fadeIn: true },
-    { id: 'intro-doshi', label: 'Sameer Doshi Intro', file: '/audio/pregame/Intro 03 Sameer Doshi.mp3', startTime: 0, fadeIn: true },
-    { id: 'intro-tang', label: 'Oliver Tang Intro', file: '/audio/pregame/Intro 04 Oliver Tang.mp3', startTime: 0, fadeIn: true },
-    { id: 'intro-khanshab', label: 'Ilyaas Khanshab Intro', file: '/audio/pregame/Intro 05 Ilyaas Khanshab.mp3', startTime: 0, fadeIn: true },
-    { id: 'intro-xia', label: 'Xavier Xia Intro', file: '/audio/pregame/Intro 06 Xavier Xia.mp3', startTime: 0, fadeIn: true },
-    { id: 'intro-smith', label: 'Hunter Smith Intro', file: '/audio/pregame/Intro 07 Hunter Smith.mp3', startTime: 0, fadeIn: true },
-    { id: 'intro-chew', label: 'Jasper Chew Intro', file: '/audio/pregame/Intro 08 Jasper Chew.mp3', startTime: 0, fadeIn: true },
-    { id: 'intro-shin', label: 'Ryan Shin Intro', file: '/audio/pregame/Intro 09 Ryan Shin.mp3', startTime: 0, fadeIn: true },
-    { id: 'intro-schmidt', label: 'Stan Schmidt Intro', file: '/audio/pregame/Intro 10 Stan Schmidt.mp3', startTime: 0, fadeIn: true },
-    { id: 'intro-bedi', label: 'Devon Bedi Intro', file: '/audio/pregame/Intro 11 Devon Bedi.mp3', startTime: 0, fadeIn: true },
-    { id: 'intro-teseo', label: 'Nicholas Teseo Intro', file: '/audio/pregame/Intro 12 Nicholas Teseo.mp3', startTime: 0, fadeIn: true },
-    { id: 'intro-oconnor', label: 'Liam OConnor Intro', file: '/audio/pregame/Intro 13 Liam OConnor.mp3', startTime: 0, fadeIn: true },
-    { id: 'intro-end', label: 'Intro End', file: '/audio/pregame/Intro end.mp3', startTime: 0, fadeIn: true },
-    { id: 'intro-monsters', label: 'Lake Monsters Intro', file: '/audio/pregame/Intro Lake Monsters.mp3', startTime: 0, fadeIn: true },
+    { id: 'intro-zaro', label: 'Gabriel Zaro Intro', file: '/audio/pregame/Intro 01 Gabriel Zaro.mp3', startTime: 0, fadeIn: false },
+    { id: 'intro-ullrich', label: 'Henry Ullrich Intro', file: '/audio/pregame/Intro 02 Henry Ullrich.mp3', startTime: 0, fadeIn: false },
+    { id: 'intro-doshi', label: 'Sameer Doshi Intro', file: '/audio/pregame/Intro 03 Sameer Doshi.mp3', startTime: 0, fadeIn: false },
+    { id: 'intro-tang', label: 'Oliver Tang Intro', file: '/audio/pregame/Intro 04 Oliver Tang.mp3', startTime: 0, fadeIn: false },
+    { id: 'intro-khanshab', label: 'Ilyaas Khanshab Intro', file: '/audio/pregame/Intro 05 Ilyaas Khanshab.mp3', startTime: 0, fadeIn: false },
+    { id: 'intro-xia', label: 'Xavier Xia Intro', file: '/audio/pregame/Intro 06 Xavier Xia.mp3', startTime: 0, fadeIn: false },
+    { id: 'intro-smith', label: 'Hunter Smith Intro', file: '/audio/pregame/Intro 07 Hunter Smith.mp3', startTime: 0, fadeIn: false },
+    { id: 'intro-chew', label: 'Jasper Chew Intro', file: '/audio/pregame/Intro 08 Jasper Chew.mp3', startTime: 0, fadeIn: false },
+    { id: 'intro-shin', label: 'Ryan Shin Intro', file: '/audio/pregame/Intro 09 Ryan Shin.mp3', startTime: 0, fadeIn: false },
+    { id: 'intro-schmidt', label: 'Stan Schmidt Intro', file: '/audio/pregame/Intro 10 Stan Schmidt.mp3', startTime: 0, fadeIn: false },
+    { id: 'intro-bedi', label: 'Devon Bedi Intro', file: '/audio/pregame/Intro 11 Devon Bedi.mp3', startTime: 0, fadeIn: false },
+    { id: 'intro-teseo', label: 'Nicholas Teseo Intro', file: '/audio/pregame/Intro 12 Nicholas Teseo.mp3', startTime: 0, fadeIn: false },
+    { id: 'intro-oconnor', label: 'Liam OConnor Intro', file: '/audio/pregame/Intro 13 Liam OConnor.mp3', startTime: 0, fadeIn: false },
+    { id: 'intro-end', label: 'Intro End', file: '/audio/pregame/Intro end.mp3', startTime: 0, fadeIn: false },
+    { id: 'intro-monsters', label: 'Lake Monsters Intro', file: '/audio/pregame/Intro Lake Monsters lineup.mp3', startTime: 0, fadeIn: false },
   ],
 };
 
