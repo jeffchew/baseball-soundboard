@@ -2,17 +2,13 @@ import { useState, useRef, useMemo } from 'react';
 import { audioConfig } from '../config';
 import audioEngine from '../utils/audioEngine';
 import { useAudioCache } from '../hooks/useAudioCache';
+import { usePlayerState } from '../hooks/usePlayerState';
 
 export default function LineupTab({ isPlaying, setIsPlaying }) {
   const { isCached } = useAudioCache();
   const [isSequencing, setIsSequencing] = useState(false);
   const [currentPlayerIndex, setCurrentPlayerIndex] = useState(-1);
-  const [enabledPlayers, setEnabledPlayers] = useState(
-    audioConfig.walkups.reduce((acc, player) => {
-      acc[player.id] = true; // All players enabled by default
-      return acc;
-    }, {})
-  );
+  const [enabledPlayers, setEnabledPlayers] = usePlayerState(audioConfig.walkups);
   const stopRequested = useRef(false);
   const sequenceId = useRef(0); // Track sequence instances
   const [selectedPregameSongId, setSelectedPregameSongId] = useState('song4');

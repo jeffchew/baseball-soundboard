@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import audioEngine from '../utils/audioEngine';
 import { useServiceWorker } from '../hooks/useServiceWorker';
+import { useDeviceDetection } from '../hooks/useDeviceDetection';
 import { audioConfig } from '../config';
 
 export default function Header({ activeTab, setActiveTab }) {
@@ -8,6 +9,7 @@ export default function Header({ activeTab, setActiveTab }) {
   const [isPreloading, setIsPreloading] = useState(false);
   const [progress, setProgress] = useState({ current: 0, total: 0 });
   const { status, offlineReady, audioCacheCount } = useServiceWorker();
+  const { isIOS } = useDeviceDetection();
 
   const handleInitialize = async () => {
     const success = await audioEngine.initialize();
@@ -76,8 +78,8 @@ export default function Header({ activeTab, setActiveTab }) {
   return (
     <header className="sticky top-0 z-50 bg-yankee-navy border-b-2 border-yankee-slate shadow-lg">
       <div className="px-4 py-3">
-        {/* Initialize Audio Button */}
-        {!isInitialized && (
+        {/* Initialize Audio Button - Only for iOS devices */}
+        {!isInitialized && isIOS && (
           <div className="mb-3">
             <button
               onClick={handleInitialize}
