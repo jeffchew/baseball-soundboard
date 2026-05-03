@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
 
 const STORAGE_KEY = 'baseball-soundboard-player-states';
-const EXPIRY_DURATION = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+const EXPIRY_DURATION = 7 * 24 * 60 * 60 * 1000; // 7 days in milliseconds
 
 /**
  * Custom hook to manage player enabled/disabled state with localStorage persistence
- * Data automatically expires after 24 hours
+ * Data automatically expires after 7 days
  */
 export function usePlayerState(players) {
   const [enabledPlayers, setEnabledPlayers] = useState(() => {
@@ -16,7 +16,7 @@ export function usePlayerState(players) {
         const { data, timestamp } = JSON.parse(stored);
         const now = Date.now();
         
-        // Check if data has expired (older than 24 hours)
+        // Check if data has expired (older than 7 days)
         if (now - timestamp < EXPIRY_DURATION) {
           // Data is still valid, use it
           return data;
