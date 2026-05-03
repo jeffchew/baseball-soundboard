@@ -570,12 +570,6 @@ export default function LineupTab({ isPlaying, setIsPlaying }) {
             {/* Player Button */}
             <button
               onClick={() => !isReordering && handlePlayerClick(player)}
-              onTouchStart={(e) => isReordering && isEnabledPlayer && handleDragStart(e, index)}
-              onTouchMove={(e) => isReordering && isEnabledPlayer && handleDragMove(e)}
-              onTouchEnd={(e) => isReordering && isEnabledPlayer && handleDragEnd(e)}
-              onMouseDown={(e) => isReordering && isEnabledPlayer && handleDragStart(e, index)}
-              onMouseMove={(e) => isReordering && isEnabledPlayer && e.buttons === 1 && handleDragMove(e)}
-              onMouseUp={(e) => isReordering && isEnabledPlayer && handleDragEnd(e)}
               disabled={!isReordering && (isSequencing || isPlaying || isDisabled)}
               className={`relative w-full rounded-lg shadow-lg ${
                 isReordering
@@ -583,8 +577,8 @@ export default function LineupTab({ isPlaying, setIsPlaying }) {
                       isDisabled
                         ? 'bg-gray-700 text-gray-400 opacity-50 cursor-not-allowed'
                         : draggedIndex === index
-                        ? 'bg-purple-700 text-white cursor-grabbing z-50 shadow-2xl'
-                        : 'bg-purple-800 text-white cursor-grab transition-all duration-200'
+                        ? 'bg-purple-700 text-white z-50 shadow-2xl'
+                        : 'bg-purple-800 text-white transition-all duration-200'
                     }`
                   : `p-6 ${
                       currentPlayerIndex === index
@@ -597,8 +591,7 @@ export default function LineupTab({ isPlaying, setIsPlaying }) {
                     }`
               }`}
               style={{
-                pointerEvents: isReordering ? (isDisabled ? 'none' : 'auto') : (!isSequencing && !isPlaying && isEnabledPlayer) ? 'auto' : 'none',
-                touchAction: isReordering && isEnabledPlayer ? 'none' : 'auto',
+                pointerEvents: (!isSequencing && !isPlaying && isEnabledPlayer) ? 'auto' : 'none',
                 transform: isReordering && isEnabledPlayer && draggedIndex === index
                   ? `translateY(${dragOffset.y}px)`
                   : undefined,
@@ -610,7 +603,16 @@ export default function LineupTab({ isPlaying, setIsPlaying }) {
               )}
               {isReordering ? (
                 <div className="flex items-center gap-3 w-full">
-                  <div className={`text-xl ${isDisabled ? 'text-gray-500' : 'text-purple-300'}`}>
+                  <div
+                    className={`text-xl p-2 -m-2 ${isDisabled ? 'text-gray-500' : 'text-purple-300 cursor-grab active:cursor-grabbing'}`}
+                    onTouchStart={(e) => isEnabledPlayer && handleDragStart(e, index)}
+                    onTouchMove={(e) => isEnabledPlayer && handleDragMove(e)}
+                    onTouchEnd={(e) => isEnabledPlayer && handleDragEnd(e)}
+                    onMouseDown={(e) => isEnabledPlayer && handleDragStart(e, index)}
+                    onMouseMove={(e) => isEnabledPlayer && e.buttons === 1 && handleDragMove(e)}
+                    onMouseUp={(e) => isEnabledPlayer && handleDragEnd(e)}
+                    style={{ touchAction: isEnabledPlayer ? 'none' : 'auto' }}
+                  >
                     {isDisabled ? '✕' : '☰'}
                   </div>
                   <div className="text-xl font-bold">#{player.number}</div>
