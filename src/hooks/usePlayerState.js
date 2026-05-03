@@ -87,4 +87,3 @@ export function usePlayerState(players) {
   return [enabledPlayers, setEnabledPlayers];
 }
 
-// Made with Bob
