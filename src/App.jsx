@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Header from './components/Header';
 import LineupTab from './components/LineupTab';
 import SoundboardTab from './components/SoundboardTab';
@@ -10,6 +10,15 @@ function App() {
   const [activeTab, setActiveTab] = useState('lineup');
   const [isPlaying, setIsPlaying] = useState(false);
   const { incrementPlayCount, getPlayCount } = usePlayCount();
+
+  // Track tab navigation
+  useEffect(() => {
+    if (window.gtag) {
+      window.gtag('event', 'tab_view', {
+        tab_name: activeTab,
+      });
+    }
+  }, [activeTab]);
 
   return (
     <div className="min-h-screen bg-yankee-navy">

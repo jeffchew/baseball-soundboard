@@ -11,6 +11,8 @@ export default function SoundboardTab({ isPlaying, setIsPlaying, incrementPlayCo
     setIsPlaying(true);
     incrementPlayCount(sound.id);
     
+    const playStartTime = Date.now();
+    
     // Track in GA4
     if (window.gtag) {
       window.gtag('event', 'play_audio', {
@@ -25,7 +27,20 @@ export default function SoundboardTab({ isPlaying, setIsPlaying, incrementPlayCo
       fadeIn: sound.fadeIn,
     });
     
-    audio.onended = () => setIsPlaying(false);
+    audio.onended = () => {
+      setIsPlaying(false);
+      
+      // Track duration when audio ends naturally
+      const durationPlayed = Math.round((Date.now() - playStartTime) / 1000);
+      if (window.gtag) {
+        window.gtag('event', 'audio_complete', {
+          audio_type: 'sound',
+          audio_name: sound.label,
+          audio_id: sound.id,
+          duration_seconds: durationPlayed,
+        });
+      }
+    };
   };
 
   return (

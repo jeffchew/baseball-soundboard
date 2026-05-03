@@ -55,7 +55,17 @@ export default function Header({ activeTab, setActiveTab }) {
       try {
         const cache = await caches.open('audio-cache');
         const keys = await cache.keys();
+        const fileCount = keys.length;
+        
         await Promise.all(keys.map(key => cache.delete(key)));
+        
+        // Track cache clear in GA4
+        if (window.gtag) {
+          window.gtag('event', 'clear_audio_cache', {
+            files_cleared: fileCount,
+          });
+        }
+        
         alert('Cache cleared! Refresh the page to see updated status.');
         window.location.reload();
       } catch (error) {

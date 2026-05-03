@@ -32,6 +32,13 @@ export default function PreloadAudio() {
     const audioFiles = getAudioFiles();
     setProgress({ current: 0, total: audioFiles.length });
 
+    // Track preload start in GA4
+    if (window.gtag) {
+      window.gtag('event', 'preload_audio_start', {
+        total_files: audioFiles.length,
+      });
+    }
+
     let successCount = 0;
     let failCount = 0;
 
@@ -55,6 +62,16 @@ export default function PreloadAudio() {
 
     setIsPreloading(false);
     setIsComplete(true);
+    
+    // Track preload completion in GA4
+    if (window.gtag) {
+      window.gtag('event', 'preload_audio_complete', {
+        total_files: audioFiles.length,
+        success_count: successCount,
+        fail_count: failCount,
+        success_rate: Math.round((successCount / audioFiles.length) * 100),
+      });
+    }
     
     console.log(`Preload complete: ${successCount} cached, ${failCount} failed`);
   };

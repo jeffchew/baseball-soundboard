@@ -33,6 +33,8 @@ export default function LineupTab({ isPlaying, setIsPlaying }) {
     
     setIsPlaying(true);
     
+    const playStartTime = Date.now();
+    
     // Track in GA4
     if (window.gtag) {
       window.gtag('event', 'play_audio', {
@@ -48,7 +50,21 @@ export default function LineupTab({ isPlaying, setIsPlaying }) {
       fadeIn: false,
     });
     
-    audio.onended = () => setIsPlaying(false);
+    audio.onended = () => {
+      setIsPlaying(false);
+      
+      // Track duration when audio ends naturally
+      const durationPlayed = Math.round((Date.now() - playStartTime) / 1000);
+      if (window.gtag) {
+        window.gtag('event', 'audio_complete', {
+          audio_type: 'walkup',
+          audio_name: player.label,
+          audio_id: player.id,
+          player_number: player.number,
+          duration_seconds: durationPlayed,
+        });
+      }
+    };
   };
 
   const startLineupSequence = async () => {
