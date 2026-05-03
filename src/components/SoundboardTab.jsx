@@ -10,6 +10,16 @@ export default function SoundboardTab({ isPlaying, setIsPlaying, incrementPlayCo
     
     setIsPlaying(true);
     incrementPlayCount(sound.id);
+    
+    // Track in GA4
+    if (window.gtag) {
+      window.gtag('event', 'play_audio', {
+        audio_type: 'sound',
+        audio_name: sound.label,
+        audio_id: sound.id,
+      });
+    }
+    
     const audio = audioEngine.play(sound.file, {
       startTime: sound.startTime,
       fadeIn: sound.fadeIn,

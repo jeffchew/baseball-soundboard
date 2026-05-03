@@ -32,6 +32,17 @@ export default function LineupTab({ isPlaying, setIsPlaying }) {
     if (isPlaying) return;
     
     setIsPlaying(true);
+    
+    // Track in GA4
+    if (window.gtag) {
+      window.gtag('event', 'play_audio', {
+        audio_type: 'walkup',
+        audio_name: player.label,
+        audio_id: player.id,
+        player_number: player.number,
+      });
+    }
+    
     const audio = audioEngine.play(player.file, {
       startTime: player.startTime,
       fadeIn: false,
@@ -61,6 +72,15 @@ export default function LineupTab({ isPlaying, setIsPlaying }) {
     });
 
     if (selectedPregameSong) {
+      // Track pregame background music in GA4
+      if (window.gtag) {
+        window.gtag('event', 'play_audio', {
+          audio_type: 'pregame_background',
+          audio_name: selectedPregameSong.label,
+          audio_id: selectedPregameSong.id,
+        });
+      }
+      
       audioEngine.playBackground(
         selectedPregameSong.file,
         0.35,
@@ -86,6 +106,15 @@ export default function LineupTab({ isPlaying, setIsPlaying }) {
 
     // Play Lake Monsters intro first
     const lakeMonsters = audioConfig.pregame.find(p => p.id === 'intro-monsters');
+    
+    // Track Lake Monsters intro in GA4
+    if (window.gtag) {
+      window.gtag('event', 'play_audio', {
+        audio_type: 'pregame_intro',
+        audio_name: lakeMonsters.label,
+        audio_id: lakeMonsters.id,
+      });
+    }
     
     const lakeAudio = audioEngine.play(lakeMonsters.file, {
       startTime: lakeMonsters.startTime,
@@ -147,6 +176,15 @@ export default function LineupTab({ isPlaying, setIsPlaying }) {
       const { intro, originalIndex } = playerIntrosWithIndices[i];
       setCurrentPlayerIndex(originalIndex);
       
+      // Track player intro in GA4
+      if (window.gtag) {
+        window.gtag('event', 'play_audio', {
+          audio_type: 'pregame_intro',
+          audio_name: intro.label,
+          audio_id: intro.id,
+        });
+      }
+      
       // Play player intro
       const audio = audioEngine.play(intro.file, {
         startTime: intro.startTime,
@@ -193,6 +231,15 @@ export default function LineupTab({ isPlaying, setIsPlaying }) {
 
     // Play intro end
     const introEnd = audioConfig.pregame.find(p => p.id === 'intro-end');
+    
+    // Track intro end in GA4
+    if (window.gtag) {
+      window.gtag('event', 'play_audio', {
+        audio_type: 'pregame_intro',
+        audio_name: introEnd.label,
+        audio_id: introEnd.id,
+      });
+    }
     
     const endAudio = audioEngine.play(introEnd.file, {
       startTime: introEnd.startTime,

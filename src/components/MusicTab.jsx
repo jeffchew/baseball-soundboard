@@ -10,6 +10,16 @@ export default function MusicTab({ isPlaying, setIsPlaying, incrementPlayCount, 
     
     setIsPlaying(true);
     incrementPlayCount(song.id);
+    
+    // Track in GA4
+    if (window.gtag) {
+      window.gtag('event', 'play_audio', {
+        audio_type: 'song',
+        audio_name: song.label,
+        audio_id: song.id,
+      });
+    }
+    
     const audio = audioEngine.play(song.file, {
       startTime: song.startTime,
       fadeIn: song.fadeIn,
