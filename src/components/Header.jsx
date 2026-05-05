@@ -79,7 +79,8 @@ export default function Header({ activeTab, setActiveTab, isPlaying, setIsPlayin
         }
         
         alert('Cache cleared and service worker reset! The page will now reload with fresh files.');
-        window.location.reload();
+        // Force reload from server, bypassing cache
+        window.location.reload(true);
       } catch (error) {
         console.error('Failed to clear cache:', error);
         alert('Failed to clear cache. Check console for details.');
