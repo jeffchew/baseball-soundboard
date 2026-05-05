@@ -4,7 +4,7 @@ import { useServiceWorker } from '../hooks/useServiceWorker';
 import { useDeviceDetection } from '../hooks/useDeviceDetection';
 import { audioConfig } from '../config';
 
-export default function Header({ activeTab, setActiveTab }) {
+export default function Header({ activeTab, setActiveTab, isPlaying, setIsPlaying }) {
   const [isInitialized, setIsInitialized] = useState(false);
   const [isPreloading, setIsPreloading] = useState(false);
   const [progress, setProgress] = useState({ current: 0, total: 0 });
@@ -75,6 +75,44 @@ export default function Header({ activeTab, setActiveTab }) {
     }
   };
 
+  const handlePlayAnthem = () => {
+    if (isPlaying) return;
+    
+    setIsPlaying(true);
+    
+    const playStartTime = Date.now();
+    
+    // Track in GA4
+    if (window.gtag) {
+      window.gtag('event', 'play_audio', {
+        audio_type: 'national_anthem',
+        audio_name: 'National Anthem',
+        audio_id: 'national-anthem',
+      });
+    }
+    
+    const anthem = audioConfig.pregame.find(p => p.id === 'national-anthem');
+    const audio = audioEngine.play(anthem.file, {
+      startTime: anthem.startTime,
+      fadeIn: anthem.fadeIn,
+    });
+    
+    audio.onended = () => {
+      setIsPlaying(false);
+      
+      // Track duration when audio ends naturally
+      const durationPlayed = Math.round((Date.now() - playStartTime) / 1000);
+      if (window.gtag) {
+        window.gtag('event', 'audio_complete', {
+          audio_type: 'national_anthem',
+          audio_name: 'National Anthem',
+          audio_id: 'national-anthem',
+          duration_seconds: durationPlayed,
+        });
+      }
+    };
+  };
+
   const tabs = [
     { id: 'lineup', label: 'Lineup' },
     { id: 'soundboard', label: 'Soundboard' },
@@ -121,6 +159,18 @@ export default function Header({ activeTab, setActiveTab }) {
                 </div>
               )}
             </div>
+            <button
+              onClick={handlePlayAnthem}
+              disabled={isPlaying}
+              className={`flex-shrink-0 font-bold py-4 px-6 rounded-lg shadow-lg transition-colors duration-200 ${
+                isPlaying
+                  ? 'bg-yankee-gray text-yankee-light cursor-not-allowed opacity-50'
+                  : 'bg-red-600 hover:bg-red-700 text-white'
+              }`}
+              title="Play National Anthem"
+            >
+              🇺🇸
+            </button>
           </div>
         )}
 
@@ -174,6 +224,18 @@ export default function Header({ activeTab, setActiveTab }) {
                 </button>
               </div>
             </div>
+            <button
+              onClick={handlePlayAnthem}
+              disabled={isPlaying}
+              className={`flex-shrink-0 font-bold py-4 px-6 rounded-lg shadow-lg transition-colors duration-200 ${
+                isPlaying
+                  ? 'bg-yankee-gray text-yankee-light cursor-not-allowed opacity-50'
+                  : 'bg-red-600 hover:bg-red-700 text-white'
+              }`}
+              title="Play National Anthem"
+            >
+              🇺🇸
+            </button>
           </div>
         )}
 

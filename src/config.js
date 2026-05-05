@@ -149,6 +149,7 @@ export const audioConfig = {
     { id: 'intro-oconnor', label: 'Liam OConnor Intro', file: '/audio/pregame/Intro 13 Liam OConnor.mp3', startTime: 0, fadeIn: false },
     { id: 'intro-end', label: 'Intro End', file: '/audio/pregame/Intro end.mp3', startTime: 0, fadeIn: false },
     { id: 'intro-monsters', label: 'Lake Monsters Intro', file: '/audio/pregame/Intro Lake Monsters lineup.mp3', startTime: 0, fadeIn: false },
+    { id: 'national-anthem', label: 'National Anthem', file: '/audio/pregame/National Anthem.mp3', startTime: 0, fadeIn: false },
   ],
 };
 
