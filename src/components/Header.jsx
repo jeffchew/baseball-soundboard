@@ -51,22 +51,34 @@ export default function Header({ activeTab, setActiveTab, isPlaying, setIsPlayin
   };
 
   const handleClearCache = async () => {
-    if (confirm('Clear all cached audio files? You will need to preload again for offline use.')) {
+    if (confirm('Clear all cached audio files and reset the app? This will fetch fresh versions of all files. You will need to preload again for offline use.')) {
       try {
-        const cache = await caches.open('audio-cache');
-        const keys = await cache.keys();
-        const fileCount = keys.length;
+        // Clear all caches
+        const cacheNames = await caches.keys();
+        let totalFilesCleared = 0;
         
-        await Promise.all(keys.map(key => cache.delete(key)));
+        for (const cacheName of cacheNames) {
+          const cache = await caches.open(cacheName);
+          const keys = await cache.keys();
+          totalFilesCleared += keys.length;
+          await Promise.all(keys.map(key => cache.delete(key)));
+        }
+        
+        // Unregister all service workers to force fresh registration
+        if ('serviceWorker' in navigator) {
+          const registrations = await navigator.serviceWorker.getRegistrations();
+          await Promise.all(registrations.map(registration => registration.unregister()));
+        }
         
         // Track cache clear in GA4
         if (window.gtag) {
           window.gtag('event', 'clear_audio_cache', {
-            files_cleared: fileCount,
+            files_cleared: totalFilesCleared,
+            service_worker_reset: true,
           });
         }
         
-        alert('Cache cleared! Refresh the page to see updated status.');
+        alert('Cache cleared and service worker reset! The page will now reload with fresh files.');
         window.location.reload();
       } catch (error) {
         console.error('Failed to clear cache:', error);
