@@ -44,7 +44,7 @@ export default defineConfig({
         // Cache audio files with CacheFirst strategy
         runtimeCaching: [
           {
-            urlPattern: /\.mp3$/i,
+            urlPattern: /\.mp3(\?.*)?$/i,
             handler: 'CacheFirst',
             options: {
               cacheName: 'audio-cache',
@@ -65,7 +65,7 @@ export default defineConfig({
             }
           },
           {
-            urlPattern: /\.m4a$/i,
+            urlPattern: /\.m4a(\?.*)?$/i,
             handler: 'CacheFirst',
             options: {
               cacheName: 'audio-cache',
