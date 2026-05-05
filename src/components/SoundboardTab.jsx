@@ -57,6 +57,12 @@ export default function SoundboardTab({ isPlaying, setIsPlaying, incrementPlayCo
       color: 'bg-purple-600 hover:bg-purple-700',
       disabledColor: 'bg-purple-800',
     },
+    'steal': {
+      title: 'Steal',
+      description: 'For stolen bases',
+      color: 'bg-yellow-600 hover:bg-yellow-700',
+      disabledColor: 'bg-yellow-800',
+    },
     'walk': {
       title: 'Walk',
       description: 'For when batter walks',

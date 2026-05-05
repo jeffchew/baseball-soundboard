@@ -52,11 +52,20 @@ export const audioConfig = {
     { id: 'greek-chant', label: 'Greek Chant', file: audioUrl('/audio/sounds/organ-greek-chant (1).mp3'), startTime: 0, fadeIn: false, category: 'hype' },
     { id: 'lets-go', label: "Let's Go", file: audioUrl('/audio/sounds/organ let_s go.mp3'), startTime: 0, fadeIn: false, category: 'hype' },
     
+    // Steal - For stolen bases
+    { id: 'cash-register', label: 'Cash Register', file: audioUrl('/audio/sounds/cash_register.mp3'), startTime: 0, fadeIn: false, category: 'steal' },
+    { id: 'metal-gear-alert', label: 'Metal Gear Alert', file: audioUrl('/audio/sounds/metal_gear_alert.mp3'), startTime: 0, fadeIn: false, category: 'steal' },
+    { id: 'mission-impossible', label: 'Mission Impossible', file: audioUrl('/audio/sounds/mission_impossible.mp3'), startTime: 0, fadeIn: false, category: 'steal' },
+    { id: 'pink-panther', label: 'Pink Panther', file: audioUrl('/audio/sounds/pink_panther.mp3'), startTime: 0, fadeIn: false, category: 'steal' },
+    { id: 'race-track', label: 'Race Track', file: audioUrl('/audio/sounds/race_track.mp3'), startTime: 0, fadeIn: false, category: 'steal' },
+    { id: 'road-runner', label: 'Road Runner', file: audioUrl('/audio/sounds/road_runner.mp3'), startTime: 0, fadeIn: false, category: 'steal' },
+    { id: 'song33', label: 'Smooth Criminal', file: audioUrl('/audio/songs/Smooth Criminal.mp3'), startTime: 91, fadeIn: true, category: 'steal' },
+    { id: 'zip-scramble', label: 'Zip Scramble', file: audioUrl('/audio/sounds/zipscramble.mp3'), startTime: 0, fadeIn: false, category: 'steal' },
+    
     // Walk - For when batter walks
     { id: 'james-bond', label: '007', file: audioUrl('/audio/sounds/007 James Bond Theme.mp3'), startTime: 36, fadeIn: true, category: 'walk' },
     { id: 'walkin', label: "I'm Walkin'", file: audioUrl('/audio/sounds/Fats Domino - I_m Walkin_.mp3'), startTime: 0, fadeIn: false, category: 'walk' },
     { id: 'jaws', label: 'Jaws Theme', file: audioUrl('/audio/sounds/Jaws - Theme.mp3'), startTime: 55, fadeIn: true, category: 'walk' },
-    { id: 'song33', label: 'Smooth Criminal', file: audioUrl('/audio/songs/Smooth Criminal.mp3'), startTime: 13, fadeIn: true, category: 'walk' },
     { id: 'take-walk', label: 'Take a Walk', file: audioUrl('/audio/sounds/Take a Walk.mp3'), startTime: 90, fadeIn: true, category: 'walk' },
     { id: 'boots-walking', label: 'These Boots', file: audioUrl('/audio/sounds/These Boots Are Made For Walking.mp3'), startTime: 0, fadeIn: false, category: 'walk' },
     { id: 'walk-man', label: 'Walk Like a Man', file: audioUrl('/audio/sounds/Walk Like a Man.mp3'), startTime: 43, fadeIn: true, category: 'walk' },
@@ -65,6 +74,7 @@ export const audioConfig = {
     // Victory Short - Quick celebration clips
     { id: 'boomshakalaka', label: 'Boomshakalaka', file: audioUrl('/audio/sounds/boomshakalaka.mp3'), startTime: 0, fadeIn: false, category: 'hit-short' },
     { id: 'cowabunga', label: 'Cowabunga', file: audioUrl('/audio/sounds/tmnt_cowabunga.mp3'), startTime: 0, fadeIn: false, category: 'hit-short' },
+    { id: 'dj-air-horn', label: 'DJ Air Horn', file: audioUrl('/audio/sounds/dj_air_horn.mp3'), startTime: 0, fadeIn: false, category: 'hit-short' },
     { id: 'ff-victory', label: 'Final Fantasy Victory', file: audioUrl('/audio/sounds/final-fantasy-vii-victory-fanfare.mp3'), startTime: 0, fadeIn: false, category: 'hit-short' },
     { id: 'hadouken', label: 'Hadouken', file: audioUrl('/audio/sounds/hadouken.mp3'), startTime: 0, fadeIn: false, category: 'hit-short' },
     { id: 'mario-star', label: 'Mario Star Theme', file: audioUrl('/audio/sounds/mario_star_theme.mp3'), startTime: 0, fadeIn: false, category: 'hit-short' },
