@@ -1,7 +1,7 @@
 // Audio configuration for the baseball soundboard
 export const audioConfig = {
   // Pregame intro settings
-  pregameBackgroundVolume: 0.40, // Volume for background music during pregame intro (0.0 to 1.0)
+  pregameBackgroundVolume: 0.50, // Volume for background music during pregame intro (0.0 to 1.0)
   
   // Player walk-up music (premixed ElevenLabs + music)
   walkups: [
