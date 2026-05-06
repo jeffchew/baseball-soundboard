@@ -35,8 +35,11 @@ export const audioConfig = {
     { id: 'slide-whistle', label: 'Slide Whistle 1', file: audioUrl('/audio/sounds/slide_whistle.mp3'), startTime: 0, fadeIn: false, category: 'at-bat' },
     { id: 'slide-whistle2', label: 'Slide Whistle 2', file: audioUrl('/audio/sounds/slide_whistle2.mp3'), startTime: 0, fadeIn: false, category: 'at-bat' },
     { id: 'sonic-ring-atbat', label: 'Sonic Ring', file: audioUrl('/audio/sounds/sonic_ring.mp3'), startTime: 0, fadeIn: false, category: 'at-bat' },
+    { id: 'strikeout-mario', label: 'Strikeout: Mario', file: audioUrl('/audio/sounds/super_mario_death.mp3'), startTime: 0, fadeIn: false, category: 'at-bat' },
+    { id: 'strikeout-megaman', label: 'Strikeout: Mega Man', file: audioUrl('/audio/sounds/megamandeath.mp3'), startTime: 0, fadeIn: false, category: 'at-bat' },
+    { id: 'strikeout-pacman', label: 'Strikeout: Pac-Man', file: audioUrl('/audio/sounds/pac_man_death.mp3'), startTime: 0, fadeIn: false, category: 'at-bat' },
+    { id: 'strikeout-pc-richards', label: 'Strikeout: PC Richards', file: audioUrl('/audio/sounds/pc_richard_and_son_whi.mp3'), startTime: 0, fadeIn: false, category: 'at-bat' },
     { id: 'whistle-atbat', label: 'Whistle', file: audioUrl('/audio/sounds/whistle.mp3'), startTime: 0, fadeIn: false, category: 'at-bat' },
-    { id: 'whistle', label: 'Strikeout', file: audioUrl('/audio/sounds/pc_richard_and_son_whi.mp3'), startTime: 0, fadeIn: false, category: 'at-bat' },
     
     // Hype - Crowd hype and energy sounds
     { id: 'baby-shark', label: 'Baby Shark', file: audioUrl('/audio/sounds/Baby Shark.mp3'), startTime: 0, fadeIn: false, category: 'hype' },
@@ -51,8 +54,10 @@ export const audioConfig = {
     { id: 'drums6', label: 'Drums 6', file: audioUrl('/audio/sounds/drums 6.mp3'), startTime: 0, fadeIn: false, category: 'hype' },
     { id: 'greek-chant', label: 'Greek Chant', file: audioUrl('/audio/sounds/organ-greek-chant (1).mp3'), startTime: 0, fadeIn: false, category: 'hype' },
     { id: 'lets-go', label: "Let's Go", file: audioUrl('/audio/sounds/organ let_s go.mp3'), startTime: 0, fadeIn: false, category: 'hype' },
+    { id: 'make-hands-clap', label: 'Make Your Hands Clap', file: audioUrl('/audio/sounds/make_your_hands_clap.mp3'), startTime: 0, fadeIn: false, category: 'hype' },
     
     // Steal - For stolen bases
+    { id: 'bad-to-bone', label: 'Bad To The Bone', file: audioUrl('/audio/songs/Bad To The Bone.mp3'), startTime: 10, fadeIn: false, category: 'steal' },
     { id: 'cash-register', label: 'Cash Register', file: audioUrl('/audio/sounds/cash_register.mp3'), startTime: 0, fadeIn: false, category: 'steal' },
     { id: 'metal-gear-alert', label: 'Metal Gear Alert', file: audioUrl('/audio/sounds/metal_gear_alert.mp3'), startTime: 0, fadeIn: false, category: 'steal' },
     { id: 'mission-impossible', label: 'Mission Impossible', file: audioUrl('/audio/sounds/mission_impossible.mp3'), startTime: 0, fadeIn: false, category: 'steal' },
@@ -104,7 +109,7 @@ export const audioConfig = {
     { id: 'song3', label: 'Are You Gonna Go My Way', file: audioUrl('/audio/songs/Are You Gonna Go My Way.mp3'), startTime: 0, fadeIn: true },
     { id: 'song4', label: "Baba O'Riley", file: audioUrl('/audio/songs/Baba O_Riley.mp3'), startTime: 32, fadeIn: true },
     { id: 'song5', label: 'Back In Black', file: audioUrl('/audio/songs/Back In Black.mp3'), startTime: 5, fadeIn: true },
-    { id: 'song5b', label: 'Bad To The Bone', file: audioUrl('/audio/songs/Bad To The Bone.mp3'), startTime: 5, fadeIn: true },
+    { id: 'song5b', label: 'Bad To The Bone', file: audioUrl('/audio/songs/Bad To The Bone.mp3'), startTime: 10, fadeIn: true },
     //{ id: 'song6', label: 'Believer', file: audioUrl('/audio/songs/Believer.mp3'), startTime: 0, fadeIn: true },
     { id: 'song7', label: 'Blitzkrieg Bop', file: audioUrl('/audio/songs/Blitzkrieg Bop.mp3'), startTime: 0, fadeIn: true },
     { id: 'song7b', label: "Can't Hold Us", file: audioUrl('/audio/songs/Can_t Hold Us.mp3'), startTime: 0, fadeIn: true },
