@@ -43,12 +43,11 @@ export default function MusicTab({ isPlaying, setIsPlaying, incrementPlayCount, 
     };
   };
 
-  const handleRandomSong = () => {
+  const handleRandomSong = (category) => {
     if (isPlaying) return;
     
-    // Exclude specific songs from random selection
-    const excludedSongIds = ['song38', 'song37']; // Theme From New York, New York & The Imperial March
-    const eligibleSongs = audioConfig.songs.filter(song => !excludedSongIds.includes(song.id));
+    // Filter songs by category
+    const eligibleSongs = audioConfig.songs.filter(song => song.category === category);
     
     // Filter songs that haven't been played yet
     const unplayedSongs = eligibleSongs.filter(song => getPlayCount(song.id) === 0);
@@ -63,65 +62,120 @@ export default function MusicTab({ isPlaying, setIsPlaying, incrementPlayCount, 
     handleSongClick(randomSong);
   };
 
+  // Get count of unplayed songs by category
+  const getUnplayedCount = (category) => {
+    const songs = audioConfig.songs.filter(song => song.category === category);
+    return songs.filter(song => getPlayCount(song.id) === 0).length;
+  };
+
+  // Category configuration
+  const categories = {
+    'upbeat': {
+      title: 'Upbeat',
+      description: 'High-energy, danceable, feel-good songs',
+      color: 'bg-yellow-600 hover:bg-yellow-700',
+      disabledColor: 'bg-yellow-800',
+    },
+    'rock': {
+      title: 'Rock',
+      description: 'Guitar-driven rock anthems',
+      color: 'bg-red-600 hover:bg-red-700',
+      disabledColor: 'bg-red-800',
+    },
+    'hip-hop': {
+      title: 'Hip Hop',
+      description: 'Hip hop and rap tracks',
+      color: 'bg-blue-600 hover:bg-blue-700',
+      disabledColor: 'bg-blue-800',
+    },
+    'villain': {
+      title: 'Villain',
+      description: 'Intimidating entrance music',
+      color: 'bg-gray-700 hover:bg-gray-800',
+      disabledColor: 'bg-gray-900',
+    },
+    'game-end': {
+      title: 'Game End',
+      description: 'Post-game celebration',
+      color: 'bg-green-600 hover:bg-green-700',
+      disabledColor: 'bg-green-800',
+    },
+  };
+
+  const songsByCategory = audioConfig.songs.reduce((acc, song) => {
+    const category = song.category || 'upbeat';
+    if (!acc[category]) acc[category] = [];
+    acc[category].push(song);
+    return acc;
+  }, {});
+
   return (
     <div className="p-4 pb-24">
-      <div className="space-y-4">
-        {/* Random Song Button */}
-        <button
-          onClick={handleRandomSong}
-          disabled={isPlaying}
-          className={`relative w-full font-bold py-6 px-6 rounded-lg shadow-lg transition-all duration-200 text-left ${
-            isPlaying
-              ? 'bg-yankee-gray text-yankee-light cursor-not-allowed opacity-50'
-              : 'bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white hover:scale-102 active:scale-98'
-          }`}
-        >
-          <div className="flex items-center">
-            <span className="text-3xl mr-4">🎲</span>
-            <div className="flex-1">
-              <span className="text-xl">Random Song</span>
-              <span className="ml-3 text-sm text-white/80">
-                {audioConfig.songs.filter(song => !['song38', 'song37'].includes(song.id) && getPlayCount(song.id) === 0).length} unplayed
-              </span>
+      {Object.entries(categories).map(([categoryKey, categoryInfo]) => {
+        const songs = songsByCategory[categoryKey] || [];
+        if (songs.length === 0) return null;
+
+        // Hide random button for villain and game-end categories
+        const showRandomButton = categoryKey !== 'villain' && categoryKey !== 'game-end';
+
+        return (
+          <div key={categoryKey} className="mb-8">
+            <div className="mb-3 flex items-center justify-between">
+              <div>
+                <h3 className="text-xl font-bold text-white">{categoryInfo.title}</h3>
+                <p className="text-sm text-yankee-light">{categoryInfo.description}</p>
+              </div>
+              {showRandomButton && (
+                <button
+                  onClick={() => handleRandomSong(categoryKey)}
+                  disabled={isPlaying}
+                  className={`font-bold py-2 px-4 rounded-lg shadow-lg transition-all duration-200 flex items-center gap-2 ${
+                    isPlaying
+                      ? 'bg-yankee-gray text-yankee-light cursor-not-allowed opacity-50'
+                      : `${categoryInfo.color} text-white hover:scale-105 active:scale-95`
+                  }`}
+                >
+                  <span className="text-xl">🎲</span>
+                  <div className="text-left">
+                    <div className="text-sm font-semibold">Random</div>
+                    <div className="text-xs text-white/80">{getUnplayedCount(categoryKey)} left</div>
+                  </div>
+                </button>
+              )}
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              {songs.map((song) => {
+                const cached = isCached(song.file);
+                
+                return (
+                  <button
+                    key={song.id}
+                    onClick={() => handleSongClick(song)}
+                    disabled={isPlaying}
+                    className={`relative font-bold py-8 px-6 rounded-lg shadow-lg transition-all duration-200 ${
+                      isPlaying
+                        ? `${categoryInfo.disabledColor} text-yankee-light cursor-not-allowed opacity-50`
+                        : `${categoryInfo.color} text-white hover:scale-105 active:scale-95`
+                    }`}
+                  >
+                    {cached && (
+                      <div className="absolute top-2 right-2 w-2 h-2 bg-green-400 rounded-full" title="Cached for offline use" />
+                    )}
+                    <div className="text-xl">{song.label}</div>
+                    {getPlayCount(song.id) > 0 && (
+                      <div className="text-sm text-white/80 mt-1">
+                        ▶ {getPlayCount(song.id)}
+                      </div>
+                    )}
+                  </button>
+                );
+              })}
             </div>
           </div>
-        </button>
-
-        {/* Song List */}
-        {audioConfig.songs.map((song) => {
-          const cached = isCached(song.file);
-          
-          return (
-            <button
-              key={song.id}
-              onClick={() => handleSongClick(song)}
-              disabled={isPlaying}
-              className={`relative w-full font-bold py-6 px-6 rounded-lg shadow-lg transition-all duration-200 text-left ${
-                isPlaying
-                  ? 'bg-yankee-gray text-yankee-light cursor-not-allowed opacity-50'
-                  : 'bg-yankee-slate hover:bg-yankee-gray text-white hover:scale-102 active:scale-98'
-              }`}
-            >
-              <div className="flex items-center">
-                <span className="text-3xl mr-4">🎵</span>
-                <div className="flex-1">
-                  <span className="text-xl">{song.label}</span>
-                  {getPlayCount(song.id) > 0 && (
-                    <span className="ml-3 text-sm text-yankee-light">
-                      ▶ {getPlayCount(song.id)}
-                    </span>
-                  )}
-                </div>
-                {cached && (
-                  <div className="ml-auto w-2 h-2 bg-green-400 rounded-full flex-shrink-0" title="Cached for offline use" />
-                )}
-              </div>
-            </button>
-          );
-        })}
-      </div>
+        );
+      })}
     </div>
   );
 }
 
-
+// Made with Bob

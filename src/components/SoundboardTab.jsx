@@ -43,6 +43,44 @@ export default function SoundboardTab({ isPlaying, setIsPlaying, incrementPlayCo
     };
   };
 
+  const handleRandomSound = (category) => {
+    if (isPlaying) return;
+    
+    // Get sounds for this category
+    let eligibleSounds = audioConfig.sounds.filter(sound => sound.category === category);
+    
+    // For "at-bat" category, exclude situational sounds (two strikes and strikeouts)
+    if (category === 'at-bat') {
+      const excludedIds = ['imperial', 'strikeout-mario', 'strikeout-megaman', 'strikeout-pacman', 'strikeout-pc-richards'];
+      eligibleSounds = eligibleSounds.filter(sound => !excludedIds.includes(sound.id));
+    }
+    
+    // Filter sounds that haven't been played yet
+    const unplayedSounds = eligibleSounds.filter(sound => getPlayCount(sound.id) === 0);
+    
+    // If all sounds have been played, use all eligible sounds
+    const availableSounds = unplayedSounds.length > 0 ? unplayedSounds : eligibleSounds;
+    
+    // Pick a random sound
+    const randomSound = availableSounds[Math.floor(Math.random() * availableSounds.length)];
+    
+    // Play the random sound
+    handleSoundClick(randomSound);
+  };
+
+  // Get count of unplayed sounds by category
+  const getUnplayedCount = (category) => {
+    let sounds = audioConfig.sounds.filter(sound => sound.category === category);
+    
+    // For "at-bat" category, exclude situational sounds
+    if (category === 'at-bat') {
+      const excludedIds = ['imperial', 'strikeout-mario', 'strikeout-megaman', 'strikeout-pacman', 'strikeout-pc-richards'];
+      sounds = sounds.filter(sound => !excludedIds.includes(sound.id));
+    }
+    
+    return sounds.filter(sound => getPlayCount(sound.id) === 0).length;
+  };
+
   // Group sounds by category
   const categories = {
     'at-bat': {
@@ -98,9 +136,26 @@ export default function SoundboardTab({ isPlaying, setIsPlaying, incrementPlayCo
 
         return (
           <div key={categoryKey} className="mb-8">
-            <div className="mb-3">
-              <h3 className="text-xl font-bold text-white">{categoryInfo.title}</h3>
-              <p className="text-sm text-yankee-light">{categoryInfo.description}</p>
+            <div className="mb-3 flex items-center justify-between">
+              <div>
+                <h3 className="text-xl font-bold text-white">{categoryInfo.title}</h3>
+                <p className="text-sm text-yankee-light">{categoryInfo.description}</p>
+              </div>
+              <button
+                onClick={() => handleRandomSound(categoryKey)}
+                disabled={isPlaying}
+                className={`font-bold py-2 px-4 rounded-lg shadow-lg transition-all duration-200 flex items-center gap-2 ${
+                  isPlaying
+                    ? 'bg-yankee-gray text-yankee-light cursor-not-allowed opacity-50'
+                    : `${categoryInfo.color} text-white hover:scale-105 active:scale-95`
+                }`}
+              >
+                <span className="text-xl">🎲</span>
+                <div className="text-left">
+                  <div className="text-sm font-semibold">Random</div>
+                  <div className="text-xs text-white/80">{getUnplayedCount(categoryKey)} left</div>
+                </div>
+              </button>
             </div>
             <div className="grid grid-cols-2 gap-4">
               {sounds.map((sound) => {

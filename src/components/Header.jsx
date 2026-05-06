@@ -4,7 +4,7 @@ import { useServiceWorker } from '../hooks/useServiceWorker';
 import { useDeviceDetection } from '../hooks/useDeviceDetection';
 import { audioConfig } from '../config';
 
-export default function Header({ activeTab, setActiveTab, isPlaying, setIsPlaying }) {
+export default function Header({ activeTab, setActiveTab, isPlaying, setIsPlaying, resetPlayCounts }) {
   const [isInitialized, setIsInitialized] = useState(false);
   const [isPreloading, setIsPreloading] = useState(false);
   const [progress, setProgress] = useState({ current: 0, total: 0 });
@@ -126,6 +126,21 @@ export default function Header({ activeTab, setActiveTab, isPlaying, setIsPlayin
     };
   };
 
+  const handleResetPlayCounts = () => {
+    if (confirm('Reset all play counts? This will clear the play count tracking for all audio files.')) {
+      resetPlayCounts();
+      
+      // Track in GA4
+      if (window.gtag) {
+        window.gtag('event', 'reset_play_counts', {
+          action: 'manual_reset',
+        });
+      }
+      
+      alert('Play counts have been reset!');
+    }
+  };
+
   const tabs = [
     { id: 'lineup', label: 'Lineup' },
     { id: 'soundboard', label: 'Soundboard' },
@@ -172,6 +187,13 @@ export default function Header({ activeTab, setActiveTab, isPlaying, setIsPlayin
                 </div>
               )}
             </div>
+            <button
+              onClick={handleResetPlayCounts}
+              className="flex-shrink-0 font-bold py-4 px-6 rounded-lg shadow-lg transition-colors duration-200 bg-orange-600 hover:bg-orange-700 text-white"
+              title="Reset Play Counts"
+            >
+              🔄
+            </button>
             <button
               onClick={handlePlayAnthem}
               disabled={isPlaying}
@@ -237,6 +259,13 @@ export default function Header({ activeTab, setActiveTab, isPlaying, setIsPlayin
                 </button>
               </div>
             </div>
+            <button
+              onClick={handleResetPlayCounts}
+              className="flex-shrink-0 font-bold py-4 px-6 rounded-lg shadow-lg transition-colors duration-200 bg-orange-600 hover:bg-orange-700 text-white"
+              title="Reset Play Counts"
+            >
+              🔄
+            </button>
             <button
               onClick={handlePlayAnthem}
               disabled={isPlaying}

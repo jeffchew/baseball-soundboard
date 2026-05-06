@@ -9,7 +9,7 @@ import { usePlayCount } from './hooks/usePlayCount';
 function App() {
   const [activeTab, setActiveTab] = useState('lineup');
   const [isPlaying, setIsPlaying] = useState(false);
-  const { incrementPlayCount, getPlayCount } = usePlayCount();
+  const { incrementPlayCount, getPlayCount, resetPlayCounts } = usePlayCount();
 
   // Track tab navigation
   useEffect(() => {
@@ -22,7 +22,7 @@ function App() {
 
   return (
     <div className="min-h-screen bg-yankee-navy">
-      <Header activeTab={activeTab} setActiveTab={setActiveTab} isPlaying={isPlaying} setIsPlaying={setIsPlaying} />
+      <Header activeTab={activeTab} setActiveTab={setActiveTab} isPlaying={isPlaying} setIsPlaying={setIsPlaying} resetPlayCounts={resetPlayCounts} />
       
       <main>
         {activeTab === 'lineup' && <LineupTab isPlaying={isPlaying} setIsPlaying={setIsPlaying} />}

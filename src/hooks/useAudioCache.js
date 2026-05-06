@@ -51,12 +51,23 @@ export function useAudioCache() {
 
   /**
    * Check if a specific file is cached
-   * @param {string} filePath - The file path (e.g., '/audio/songs/Sweet Caroline.mp3')
+   * @param {string} filePath - The file path (e.g., '/audio/songs/Sweet Caroline.mp3?v=123')
    * @returns {boolean} True if the file is cached
    */
   const isCached = (filePath) => {
-    // Normalize the input path
+    // Remove query parameters from the input path
     let normalizedPath = filePath;
+    
+    // If it's a full URL or has query params, parse it
+    try {
+      const url = new URL(filePath, window.location.origin);
+      normalizedPath = url.pathname;
+    } catch {
+      // If not a valid URL, treat as path and remove query string manually
+      normalizedPath = filePath.split('?')[0];
+    }
+    
+    // Ensure path starts with /
     if (!normalizedPath.startsWith('/')) {
       normalizedPath = '/' + normalizedPath;
     }
