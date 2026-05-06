@@ -43,9 +43,51 @@ export default function MusicTab({ isPlaying, setIsPlaying, incrementPlayCount, 
     };
   };
 
+  const handleRandomSong = () => {
+    if (isPlaying) return;
+    
+    // Exclude specific songs from random selection
+    const excludedSongIds = ['song38', 'song37']; // Theme From New York, New York & The Imperial March
+    const eligibleSongs = audioConfig.songs.filter(song => !excludedSongIds.includes(song.id));
+    
+    // Filter songs that haven't been played yet
+    const unplayedSongs = eligibleSongs.filter(song => getPlayCount(song.id) === 0);
+    
+    // If all songs have been played, use all eligible songs
+    const availableSongs = unplayedSongs.length > 0 ? unplayedSongs : eligibleSongs;
+    
+    // Pick a random song
+    const randomSong = availableSongs[Math.floor(Math.random() * availableSongs.length)];
+    
+    // Play the random song
+    handleSongClick(randomSong);
+  };
+
   return (
     <div className="p-4 pb-24">
       <div className="space-y-4">
+        {/* Random Song Button */}
+        <button
+          onClick={handleRandomSong}
+          disabled={isPlaying}
+          className={`relative w-full font-bold py-6 px-6 rounded-lg shadow-lg transition-all duration-200 text-left ${
+            isPlaying
+              ? 'bg-yankee-gray text-yankee-light cursor-not-allowed opacity-50'
+              : 'bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white hover:scale-102 active:scale-98'
+          }`}
+        >
+          <div className="flex items-center">
+            <span className="text-3xl mr-4">🎲</span>
+            <div className="flex-1">
+              <span className="text-xl">Random Song</span>
+              <span className="ml-3 text-sm text-white/80">
+                {audioConfig.songs.filter(song => !['song38', 'song37'].includes(song.id) && getPlayCount(song.id) === 0).length} unplayed
+              </span>
+            </div>
+          </div>
+        </button>
+
+        {/* Song List */}
         {audioConfig.songs.map((song) => {
           const cached = isCached(song.file);
           
