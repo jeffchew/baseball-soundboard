@@ -94,6 +94,12 @@ export default function MusicTab({ isPlaying, setIsPlaying, incrementPlayCount, 
       color: 'bg-gray-700 hover:bg-gray-800',
       disabledColor: 'bg-gray-900',
     },
+    'mothers-day': {
+      title: "Mother's Day",
+      description: 'Songs celebrating moms',
+      color: 'bg-pink-600 hover:bg-pink-700',
+      disabledColor: 'bg-pink-800',
+    },
     'game-end': {
       title: 'Game End',
       description: 'Post-game celebration',
@@ -115,8 +121,8 @@ export default function MusicTab({ isPlaying, setIsPlaying, incrementPlayCount, 
         const songs = songsByCategory[categoryKey] || [];
         if (songs.length === 0) return null;
 
-        // Hide random button for villain and game-end categories
-        const showRandomButton = categoryKey !== 'villain' && categoryKey !== 'game-end';
+        // Hide random button for villain, mothers-day, and game-end categories
+        const showRandomButton = categoryKey !== 'villain' && categoryKey !== 'mothers-day' && categoryKey !== 'game-end';
 
         return (
           <div key={categoryKey} className="mb-8">

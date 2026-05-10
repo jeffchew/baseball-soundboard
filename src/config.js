@@ -126,7 +126,7 @@ export const audioConfig = {
     { id: 'song14b', label: 'Espresso', file: audioUrl('/audio/songs/Espresso.mp3'), startTime: 0, fadeIn: false, category: 'upbeat' },
     { id: 'song15', label: 'Eye of the Tiger', file: audioUrl('/audio/songs/Eye of the Tiger.mp3'), startTime: 0, fadeIn: false, category: 'rock' },
     //{ id: 'song16', label: 'Trap Queen', file: audioUrl('/audio/songs/Fetty Wap - Trap Queen (Clean).mp3'), startTime: 0, fadeIn: true },
-    { id: 'song16a', label: "Gettin' Jiggy Wit It", file: audioUrl("/audio/songs/Gettin' Jiggy Wit It.mp3"), startTime: 0, fadeIn: false, category: 'upbeat' },
+    { id: 'song16a', label: "Gettin Jiggy Wit It", file: audioUrl("/audio/songs/Gettin Jiggy Wit It.mp3"), startTime: 0, fadeIn: false, category: 'upbeat' },
     { id: 'song16b', label: 'Happy', file: audioUrl('/audio/songs/Happy.mp3'), startTime: 0, fadeIn: false, category: 'upbeat' },
     { id: 'song17', label: 'Hells Bells', file: audioUrl('/audio/songs/Hells Bells.mp3'), startTime: 19, fadeIn: true, category: 'rock' },
     { id: 'song18', label: 'Highway to Hell', file: audioUrl('/audio/songs/Highway to Hell.mp3'), startTime: 0, fadeIn: false, category: 'rock' },
@@ -175,6 +175,11 @@ export const audioConfig = {
     { id: 'song44b', label: 'Whole Lotta Love', file: audioUrl('/audio/songs/Whole Lotta Love.mp3'), startTime: 0, fadeIn: false, category: 'rock' },
     { id: 'song45', label: 'YMCA', file: audioUrl('/audio/songs/YMCA.mp3'), startTime: 0, fadeIn: false, category: 'upbeat' },
     { id: 'song46', label: 'You Shook Me All Night Long', file: audioUrl('/audio/songs/You Shook Me All Night Long.mp3'), startTime: 0, fadeIn: true, category: 'rock' },
+    { id: 'song48', label: 'A Song for Mama', file: audioUrl('/audio/songs/A Song for Mama.mp3'), startTime: 60, fadeIn: true, category: 'mothers-day' },
+    { id: 'song49', label: 'The Best Day', file: audioUrl('/audio/songs/The Best Day.mp3'), startTime: 50, fadeIn: true, category: 'mothers-day' },
+    { id: 'song50', label: 'Mama', file: audioUrl('/audio/songs/Spice Girls - Mama.mp3'), startTime: 30, fadeIn: true, category: 'mothers-day' },
+    { id: 'song51', label: "Mama's Song", file: audioUrl("/audio/songs/Mama_s Song.mp3"), startTime: 60, fadeIn: true, category: 'mothers-day' },
+    { id: 'song52', label: 'Mama Said', file: audioUrl('/audio/songs/Mama Said.mp3'), startTime: 0, fadeIn: false, category: 'mothers-day' },
   ],
 
   // Selectable background music for pregame intro sequence
