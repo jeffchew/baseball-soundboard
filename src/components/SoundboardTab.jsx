@@ -25,6 +25,8 @@ export default function SoundboardTab({ isPlaying, setIsPlaying, incrementPlayCo
     const audio = audioEngine.play(sound.file, {
       startTime: sound.startTime,
       fadeIn: sound.fadeIn,
+      audioType: 'sound',
+      initialDelay: sound.initialDelay || 0,
     });
     
     audio.onended = () => {

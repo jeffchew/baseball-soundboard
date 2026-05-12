@@ -11,6 +11,7 @@ class AudioEngine {
     this.fadeInterval = null;
     this.backgroundFadeInterval = null;
     this.sequenceStopCallback = null;
+    this.currentAudioType = null; // Track type: 'song', 'pregame', 'anthem', 'walkup', 'sound'
     
     AudioEngine.instance = this;
   }
@@ -35,7 +36,10 @@ class AudioEngine {
 
   // Play audio with optional fade-in and start time
   play(file, options = {}) {
-    const { startTime = 0, fadeIn = false, isSequence = false } = options;
+    const { startTime = 0, fadeIn = false, isSequence = false, audioType = null, initialDelay = 0 } = options;
+    
+    // Store the audio type for confirmation checks
+    this.currentAudioType = audioType;
     
     // Immediately stop any currently playing audio (no fade)
     if (this.activeAudio) {
@@ -57,20 +61,67 @@ class AudioEngine {
       this.activeAudio = null;
     }
     
-    // Create new audio element
-    this.activeAudio = new Audio(file);
-    this.activeAudio.currentTime = startTime;
+    // Helper function to start playback
+    const startPlayback = () => {
+      // Create new audio element
+      this.activeAudio = new Audio(file);
+      this.activeAudio.currentTime = startTime;
+      
+      if (fadeIn) {
+        this.activeAudio.volume = 0;
+        this.activeAudio.play();
+        this.fadeIn(this.activeAudio, 1.0, 1200);
+      } else {
+        this.activeAudio.volume = 1.0;
+        this.activeAudio.play();
+      }
+      
+      return this.activeAudio;
+    };
     
-    if (fadeIn) {
-      this.activeAudio.volume = 0;
-      this.activeAudio.play();
-      this.fadeIn(this.activeAudio, 1.0, 1200);
+    // If there's an initial delay, play silent audio first to wake up Bluetooth speakers
+    if (initialDelay > 0) {
+      // Create a silent audio element to wake up the Bluetooth connection
+      const silentAudio = new Audio();
+      silentAudio.src = 'data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhAgAAAAEA';
+      silentAudio.volume = 0.01; // Very low volume
+      
+      // Create a proxy object that will forward event handlers to the actual audio when it's ready
+      const audioProxy = {
+        _handlers: {},
+        set onended(handler) {
+          this._handlers.onended = handler;
+        },
+        get onended() {
+          return this._handlers.onended;
+        }
+      };
+      
+      // Play silent audio immediately
+      silentAudio.play().then(() => {
+        // After delay, stop silent audio and play actual sound
+        setTimeout(() => {
+          silentAudio.pause();
+          const actualAudio = startPlayback();
+          // Transfer any event handlers that were set on the proxy
+          if (audioProxy._handlers.onended) {
+            actualAudio.onended = audioProxy._handlers.onended;
+          }
+        }, initialDelay * 1000);
+      }).catch(() => {
+        // If silent audio fails, just use regular delay
+        setTimeout(() => {
+          const actualAudio = startPlayback();
+          if (audioProxy._handlers.onended) {
+            actualAudio.onended = audioProxy._handlers.onended;
+          }
+        }, initialDelay * 1000);
+      });
+      
+      return audioProxy;
     } else {
-      this.activeAudio.volume = 1.0;
-      this.activeAudio.play();
+      return startPlayback();
     }
-    
-    return this.activeAudio;
   }
 
   // Smooth stop with fade-out
@@ -87,9 +138,20 @@ class AudioEngine {
           this.activeAudio.pause();
           this.activeAudio.currentTime = 0;
           this.activeAudio = null;
+          this.currentAudioType = null;
         }
       });
     }
+  }
+
+  // Get current audio type
+  getCurrentAudioType() {
+    return this.currentAudioType;
+  }
+
+  // Check if current audio requires confirmation to stop
+  requiresStopConfirmation() {
+    return ['song', 'pregame', 'anthem'].includes(this.currentAudioType);
   }
 
   // Register a callback to stop sequences

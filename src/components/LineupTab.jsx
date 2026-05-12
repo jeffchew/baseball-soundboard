@@ -155,6 +155,7 @@ export default function LineupTab({ isPlaying, setIsPlaying }) {
     const audio = audioEngine.play(player.file, {
       startTime: player.startTime,
       fadeIn: false,
+      audioType: 'walkup',
     });
     
     audio.onended = () => {
@@ -243,6 +244,7 @@ export default function LineupTab({ isPlaying, setIsPlaying }) {
       startTime: lakeMonsters.startTime,
       fadeIn: false,
       isSequence: true,
+      audioType: 'pregame',
     });
 
     await new Promise((resolve) => {
@@ -317,6 +319,7 @@ export default function LineupTab({ isPlaying, setIsPlaying }) {
         startTime: intro.startTime,
         fadeIn: false,
         isSequence: true,
+        audioType: 'pregame',
       });
 
       // Wait for audio to finish
@@ -372,6 +375,7 @@ export default function LineupTab({ isPlaying, setIsPlaying }) {
       startTime: introEnd.startTime,
       fadeIn: false,
       isSequence: true,
+      audioType: 'anthem',
     });
 
     await new Promise((resolve) => {

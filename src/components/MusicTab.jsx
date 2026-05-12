@@ -25,6 +25,7 @@ export default function MusicTab({ isPlaying, setIsPlaying, incrementPlayCount, 
     const audio = audioEngine.play(song.file, {
       startTime: song.startTime,
       fadeIn: song.fadeIn,
+      audioType: 'song',
     });
     
     audio.onended = () => {
