@@ -42,6 +42,7 @@ export default defineConfig({
         navigateFallback: null,
         
         // Cache audio files with NetworkFirst strategy to avoid stale cache issues
+        // Short timeout (2s) for quick fallback to cache on spotty networks
         runtimeCaching: [
           {
             urlPattern: /\.mp3(\?.*)?$/i,
@@ -55,7 +56,7 @@ export default defineConfig({
               cacheableResponse: {
                 statuses: [0, 200, 206] // Include 206 for range requests
               },
-              networkTimeoutSeconds: 10,
+              networkTimeoutSeconds: 2, // Quick fallback to cache on slow/spotty networks
               // Critical: RangeRequestsPlugin for Safari/iOS audio support
               plugins: [
                 {
@@ -77,7 +78,7 @@ export default defineConfig({
               cacheableResponse: {
                 statuses: [0, 200, 206]
               },
-              networkTimeoutSeconds: 10,
+              networkTimeoutSeconds: 2, // Quick fallback to cache on slow/spotty networks
               rangeRequests: true
             }
           },
