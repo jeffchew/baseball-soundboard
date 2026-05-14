@@ -41,11 +41,11 @@ export default defineConfig({
         // Don't cache the service worker itself
         navigateFallback: null,
         
-        // Cache audio files with CacheFirst strategy
+        // Cache audio files with NetworkFirst strategy to avoid stale cache issues
         runtimeCaching: [
           {
             urlPattern: /\.mp3(\?.*)?$/i,
-            handler: 'CacheFirst',
+            handler: 'NetworkFirst',
             options: {
               cacheName: 'audio-cache',
               expiration: {
@@ -55,6 +55,7 @@ export default defineConfig({
               cacheableResponse: {
                 statuses: [0, 200, 206] // Include 206 for range requests
               },
+              networkTimeoutSeconds: 10,
               // Critical: RangeRequestsPlugin for Safari/iOS audio support
               plugins: [
                 {
@@ -66,7 +67,7 @@ export default defineConfig({
           },
           {
             urlPattern: /\.m4a(\?.*)?$/i,
-            handler: 'CacheFirst',
+            handler: 'NetworkFirst',
             options: {
               cacheName: 'audio-cache',
               expiration: {
@@ -76,6 +77,7 @@ export default defineConfig({
               cacheableResponse: {
                 statuses: [0, 200, 206]
               },
+              networkTimeoutSeconds: 10,
               rangeRequests: true
             }
           },
