@@ -131,7 +131,7 @@ export const audioConfig = {
     //{ id: 'song16', label: 'Trap Queen', file: audioUrl('/audio/songs/Fetty Wap - Trap Queen (Clean).mp3'), startTime: 0, fadeIn: true },
     { id: 'song16a', label: "Gettin Jiggy Wit It", file: audioUrl("/audio/songs/Gettin Jiggy Wit It.mp3"), startTime: 0, fadeIn: false, category: 'upbeat' },
     { id: 'song16b', label: 'Happy', file: audioUrl('/audio/songs/Happy.mp3'), startTime: 0, fadeIn: false, category: 'upbeat' },
-    { id: 'song16c', label: 'Hooked on a Feeling', file: audioUrl('/audio/songs/Hooked On A Feeling.mp3'), startTime: 0, fadeIn: false, category: 'upbeat' },
+    { id: 'song16c', label: 'Hooked on a Feeling', file: audioUrl('/audio/songs/Hooked on a Feeling.mp3'), startTime: 0, fadeIn: false, category: 'upbeat' },
     { id: 'song17', label: 'Hells Bells', file: audioUrl('/audio/songs/Hells Bells.mp3'), startTime: 19, fadeIn: true, category: 'rock' },
     { id: 'song18', label: 'Highway to Hell', file: audioUrl('/audio/songs/Highway to Hell.mp3'), startTime: 0, fadeIn: false, category: 'rock' },
     { id: 'song18b', label: 'Hypnotize', file: audioUrl('/audio/songs/Hypnotize.mp3'), startTime: 0, fadeIn: false, category: 'hip-hop' },
