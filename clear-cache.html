@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Clear Cache - Lake Monsters DJ</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 600px;
+      margin: 50px auto;
+      padding: 20px;
+      background: #001c43;
+      color: white;
+    }
+    button {
+      background: #0066cc;
+      color: white;
+      border: none;
+      padding: 15px 30px;
+      font-size: 16px;
+      cursor: pointer;
+      border-radius: 5px;
+      margin: 10px 0;
+      width: 100%;
+    }
+    button:hover {
+      background: #0052a3;
+    }
+    .status {
+      margin: 20px 0;
+      padding: 15px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 5px;
+    }
+    .success {
+      background: rgba(0,255,0,0.2);
+    }
+    .error {
+      background: rgba(255,0,0,0.2);
+    }
+  </style>
+</head>
+<body>
+  <h1>🧹 Clear All Caches</h1>
+  <p>This will clear all cached data including audio files and force a fresh reload.</p>
+  
+  <button onclick="clearAllCaches()">Clear All Caches</button>
+  <button onclick="unregisterServiceWorker()">Unregister Service Worker</button>
+  <button onclick="clearEverything()">🔥 Nuclear Option: Clear Everything</button>
+  
+  <div id="status" class="status"></div>
+
+  <script>
+    const status = document.getElementById('status');
+
+    function log(message, isError = false) {
+      console.log(message);
+      const div = document.createElement('div');
+      div.textContent = message;
+      div.style.marginBottom = '5px';
+      if (isError) div.style.color = '#ff6b6b';
+      status.appendChild(div);
+    }
+
+    async function clearAllCaches() {
+      status.innerHTML = '';
+      status.className = 'status';
+      
+      try {
+        log('🗑️ Clearing all caches...');
+        
+        const cacheNames = await caches.keys();
+        log(`Found ${cacheNames.length} cache(s): ${cacheNames.join(', ')}`);
+        
+        for (const cacheName of cacheNames) {
+          await caches.delete(cacheName);
+          log(`✅ Deleted cache: ${cacheName}`);
+        }
+        
+        log('✨ All caches cleared successfully!');
+        status.className = 'status success';
+        
+        setTimeout(() => {
+          log('🔄 Reloading page in 2 seconds...');
+          setTimeout(() => window.location.href = '/', 2000);
+        }, 1000);
+        
+      } catch (error) {
+        log(`❌ Error: ${error.message}`, true);
+        status.className = 'status error';
+      }
+    }
+
+    async function unregisterServiceWorker() {
+      status.innerHTML = '';
+      status.className = 'status';
+      
+      try {
+        log('🔧 Unregistering service workers...');
+        
+        const registrations = await navigator.serviceWorker.getRegistrations();
+        log(`Found ${registrations.length} service worker(s)`);
+        
+        for (const registration of registrations) {
+          await registration.unregister();
+          log(`✅ Unregistered service worker: ${registration.scope}`);
+        }
+        
+        log('✨ All service workers unregistered!');
+        status.className = 'status success';
+        
+      } catch (error) {
+        log(`❌ Error: ${error.message}`, true);
+        status.className = 'status error';
+      }
+    }
+
+    async function clearEverything() {
+      status.innerHTML = '';
+      status.className = 'status';
+      
+      try {
+        log('💣 Starting nuclear cleanup...');
+        
+        // Clear all caches
+        const cacheNames = await caches.keys();
+        log(`Deleting ${cacheNames.length} cache(s)...`);
+        for (const cacheName of cacheNames) {
+          await caches.delete(cacheName);
+          log(`✅ Deleted: ${cacheName}`);
+        }
+        
+        // Unregister all service workers
+        const registrations = await navigator.serviceWorker.getRegistrations();
+        log(`Unregistering ${registrations.length} service worker(s)...`);
+        for (const registration of registrations) {
+          await registration.unregister();
+          log(`✅ Unregistered: ${registration.scope}`);
+        }
+        
+        // Clear localStorage
+        log('Clearing localStorage...');
+        localStorage.clear();
+        log('✅ localStorage cleared');
+        
+        // Clear sessionStorage
+        log('Clearing sessionStorage...');
+        sessionStorage.clear();
+        log('✅ sessionStorage cleared');
+        
+        log('');
+        log('🎉 EVERYTHING CLEARED!');
+        log('🔄 Reloading in 3 seconds with hard refresh...');
+        status.className = 'status success';
+        
+        setTimeout(() => {
+          // Hard reload with cache bypass
+          window.location.href = '/?nocache=' + Date.now();
+          window.location.reload(true);
+        }, 3000);
+        
+      } catch (error) {
+        log(`❌ Error: ${error.message}`, true);
+        status.className = 'status error';
+      }
+    }
+
+    // Show current cache status on load
+    window.addEventListener('load', async () => {
+      try {
+        const cacheNames = await caches.keys();
+        log(`Current caches: ${cacheNames.length > 0 ? cacheNames.join(', ') : 'None'}`);
+        
+        const registrations = await navigator.serviceWorker.getRegistrations();
+        log(`Active service workers: ${registrations.length}`);
+      } catch (error) {
+        log(`Error checking status: ${error.message}`, true);
+      }
+    });
+  </script>
+</body>
+</html>
