@@ -595,7 +595,7 @@ export default function LineupTab({ isPlaying, setIsPlaying }) {
                     }`
               }`}
               style={{
-                pointerEvents: (!isSequencing && !isPlaying && isEnabledPlayer) ? 'auto' : 'none',
+                pointerEvents: (isReordering || (!isSequencing && !isPlaying && isEnabledPlayer)) ? 'auto' : 'none',
                 transform: isReordering && isEnabledPlayer && draggedIndex === index
                   ? `translateY(${dragOffset.y}px)`
                   : undefined,
