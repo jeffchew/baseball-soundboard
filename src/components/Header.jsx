@@ -168,7 +168,7 @@ export default function Header({ activeTab, setActiveTab, isPlaying, setIsPlayin
 
         {/* Preload Button */}
         {showPreloadButton && (
-          <div className="mb-3 flex items-center gap-3">
+          <div className="mb-3 flex items-center gap-2">
             <img
               src="/lake-monsters-logo.png"
               alt="Lake Monsters Logo"
@@ -187,17 +187,17 @@ export default function Header({ activeTab, setActiveTab, isPlaying, setIsPlayin
                 </div>
               )}
             </div>
-            <button
-              onClick={handleResetPlayCounts}
-              className="flex-shrink-0 font-bold py-4 px-6 rounded-lg shadow-lg transition-colors duration-200 bg-orange-600 hover:bg-orange-700 text-white"
-              title="Reset Play Counts"
+            <a
+              href="/clear-cache.html"
+              className="flex-shrink-0 font-bold py-3 px-4 rounded-lg shadow-lg transition-colors duration-200 bg-gray-600 hover:bg-gray-700 text-white inline-block"
+              title="Cache & Settings"
             >
-              🔄
-            </button>
+              🔧
+            </a>
             <button
               onClick={handlePlayAnthem}
               disabled={isPlaying}
-              className={`flex-shrink-0 font-bold py-4 px-6 rounded-lg shadow-lg transition-colors duration-200 ${
+              className={`flex-shrink-0 font-bold py-3 px-4 rounded-lg shadow-lg transition-colors duration-200 ${
                 isPlaying
                   ? 'bg-yankee-gray text-yankee-light cursor-not-allowed opacity-50'
                   : 'bg-red-600 hover:bg-red-700 text-white'
@@ -229,56 +229,36 @@ export default function Header({ activeTab, setActiveTab, isPlaying, setIsPlayin
         )}
 
         {showOfflineReady && (
-          <div className="mb-3 flex items-center gap-3">
+          <div className="mb-3 flex items-center gap-2">
             <img
               src="/lake-monsters-logo.png"
               alt="Lake Monsters Logo"
               className="h-12 w-auto flex-shrink-0"
             />
-            <div className="flex-1 bg-green-600 text-white rounded-lg p-4 shadow-lg">
-              <div className="flex items-center justify-between">
-                <div className="flex-1">
-                  <div className="flex items-center justify-center gap-2 font-bold mb-1">
-                    <span>📶</span>
-                    <span>Offline Ready</span>
-                    <span className="relative flex h-2 w-2">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
-                      <span className="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
-                    </span>
-                  </div>
-                  <div className="text-center text-sm opacity-90">
-                    {audioCacheCount} audio files cached • Ready for game day!
-                  </div>
-                </div>
-                <div className="ml-3 flex gap-2">
-                  <button
-                    onClick={handleClearCache}
-                    className="text-xs bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded transition-colors"
-                    title="Clear cached audio files"
-                  >
-                    🗑️ Clear
-                  </button>
-                  <a
-                    href="/clear-cache.html"
-                    className="text-xs bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded transition-colors inline-block"
-                    title="Advanced cache management"
-                  >
-                    🔧
-                  </a>
-                </div>
+            <div className="flex-1 bg-green-600 text-white rounded-lg p-3 shadow-lg">
+              <div className="flex items-center justify-center gap-2 font-bold mb-1">
+                <span>📶</span>
+                <span>Offline Ready</span>
+                <span className="relative flex h-2 w-2 flex-shrink-0">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
+                </span>
+              </div>
+              <div className="text-center text-xs opacity-90">
+                {audioCacheCount} files cached • Ready for game day!
               </div>
             </div>
-            <button
-              onClick={handleResetPlayCounts}
-              className="flex-shrink-0 font-bold py-4 px-6 rounded-lg shadow-lg transition-colors duration-200 bg-orange-600 hover:bg-orange-700 text-white"
-              title="Reset Play Counts"
+            <a
+              href="/clear-cache.html"
+              className="flex-shrink-0 font-bold py-3 px-4 rounded-lg shadow-lg transition-colors duration-200 bg-gray-600 hover:bg-gray-700 text-white inline-block"
+              title="Cache & Settings"
             >
-              🔄
-            </button>
+              🔧
+            </a>
             <button
               onClick={handlePlayAnthem}
               disabled={isPlaying}
-              className={`flex-shrink-0 font-bold py-4 px-6 rounded-lg shadow-lg transition-colors duration-200 ${
+              className={`flex-shrink-0 font-bold py-3 px-4 rounded-lg shadow-lg transition-colors duration-200 ${
                 isPlaying
                   ? 'bg-yankee-gray text-yankee-light cursor-not-allowed opacity-50'
                   : 'bg-red-600 hover:bg-red-700 text-white'

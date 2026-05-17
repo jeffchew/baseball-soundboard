@@ -8,7 +8,7 @@
     body {
       font-family: Arial, sans-serif;
       max-width: 600px;
-      margin: 50px auto;
+      margin: 20px auto;
       padding: 20px;
       background: #001c43;
       color: white;
@@ -27,6 +27,24 @@
     button:hover {
       background: #0052a3;
     }
+    button.secondary {
+      background: #ff6b00;
+    }
+    button.secondary:hover {
+      background: #cc5500;
+    }
+    button.danger {
+      background: #dc2626;
+    }
+    button.danger:hover {
+      background: #b91c1c;
+    }
+    button.back {
+      background: #4b5563;
+    }
+    button.back:hover {
+      background: #374151;
+    }
     .status {
       margin: 20px 0;
       padding: 15px;
@@ -39,15 +57,21 @@
     .error {
       background: rgba(255,0,0,0.2);
     }
+    h1 {
+      margin-top: 0;
+    }
   </style>
 </head>
 <body>
-  <h1>🧹 Clear All Caches</h1>
-  <p>This will clear all cached data including audio files and force a fresh reload.</p>
+  <h1>🧹 Cache & Data Management</h1>
+  <p>Manage cached data, service workers, and app settings.</p>
   
-  <button onclick="clearAllCaches()">Clear All Caches</button>
-  <button onclick="unregisterServiceWorker()">Unregister Service Worker</button>
-  <button onclick="clearEverything()">🔥 Nuclear Option: Clear Everything</button>
+  <button onclick="quickClearCache()">⚡ Quick Clear Cache & Reload</button>
+  <button onclick="clearAllCaches()">🗑️ Clear All Caches</button>
+  <button onclick="unregisterServiceWorker()">🔧 Unregister Service Worker</button>
+  <button onclick="resetPlayCounts()" class="secondary">🔄 Reset Play Counts</button>
+  <button onclick="clearEverything()" class="danger">🔥 Nuclear Option: Clear Everything</button>
+  <button onclick="window.location.href='/'" class="back">← Back to App</button>
   
   <div id="status" class="status"></div>
 
@@ -83,6 +107,74 @@
         
         setTimeout(() => {
           log('🔄 Reloading page in 2 seconds...');
+          setTimeout(() => window.location.href = '/', 2000);
+        }, 1000);
+        
+      } catch (error) {
+        log(`❌ Error: ${error.message}`, true);
+        status.className = 'status error';
+      }
+    }
+
+    async function quickClearCache() {
+      status.innerHTML = '';
+      status.className = 'status';
+      
+      try {
+        log('⚡ Quick cache clear...');
+        
+        // Clear all caches
+        const cacheNames = await caches.keys();
+        log(`Clearing ${cacheNames.length} cache(s)...`);
+        for (const cacheName of cacheNames) {
+          const cache = await caches.open(cacheName);
+          const keys = await cache.keys();
+          await Promise.all(keys.map(key => cache.delete(key)));
+        }
+        
+        // Unregister all service workers
+        if ('serviceWorker' in navigator) {
+          const registrations = await navigator.serviceWorker.getRegistrations();
+          await Promise.all(registrations.map(registration => registration.unregister()));
+        }
+        
+        log('✨ Cache cleared and service worker reset!');
+        log('🔄 Reloading with fresh files...');
+        status.className = 'status success';
+        
+        setTimeout(() => {
+          window.location.reload(true);
+        }, 1500);
+        
+      } catch (error) {
+        log(`❌ Error: ${error.message}`, true);
+        status.className = 'status error';
+      }
+    }
+
+    function resetPlayCounts() {
+      status.innerHTML = '';
+      status.className = 'status';
+      
+      try {
+        log('🔄 Resetting play counts...');
+        
+        // Clear play count data from localStorage
+        const keys = Object.keys(localStorage);
+        const playCountKeys = keys.filter(key => key.startsWith('playCount_'));
+        
+        log(`Found ${playCountKeys.length} play count entries`);
+        
+        playCountKeys.forEach(key => {
+          localStorage.removeItem(key);
+          log(`✅ Cleared: ${key}`);
+        });
+        
+        log('✨ Play counts reset successfully!');
+        status.className = 'status success';
+        
+        setTimeout(() => {
+          log('🔄 Returning to app in 2 seconds...');
           setTimeout(() => window.location.href = '/', 2000);
         }, 1000);
         
@@ -174,6 +266,11 @@
         
         const registrations = await navigator.serviceWorker.getRegistrations();
         log(`Active service workers: ${registrations.length}`);
+        
+        // Show play count info
+        const keys = Object.keys(localStorage);
+        const playCountKeys = keys.filter(key => key.startsWith('playCount_'));
+        log(`Play count entries: ${playCountKeys.length}`);
       } catch (error) {
         log(`Error checking status: ${error.message}`, true);
       }
