@@ -250,13 +250,22 @@ export default function Header({ activeTab, setActiveTab, isPlaying, setIsPlayin
                     {audioCacheCount} audio files cached • Ready for game day!
                   </div>
                 </div>
-                <button
-                  onClick={handleClearCache}
-                  className="ml-3 text-xs bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded transition-colors"
-                  title="Clear cached audio files"
-                >
-                  🗑️ Clear
-                </button>
+                <div className="ml-3 flex gap-2">
+                  <button
+                    onClick={handleClearCache}
+                    className="text-xs bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded transition-colors"
+                    title="Clear cached audio files"
+                  >
+                    🗑️ Clear
+                  </button>
+                  <a
+                    href="/clear-cache.html"
+                    className="text-xs bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded transition-colors inline-block"
+                    title="Advanced cache management"
+                  >
+                    🔧
+                  </a>
+                </div>
               </div>
             </div>
             <button

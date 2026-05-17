@@ -21,7 +21,7 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['vite.svg', 'manifest.json'],
+      includeAssets: ['vite.svg', 'manifest.json', 'clear-cache.html'],
       manifest: {
         name: 'Lake Monsters Soundboard',
         short_name: 'Lake Monsters',
@@ -114,8 +114,8 @@ export default defineConfig({
         // Glob patterns for precaching
         globPatterns: ['**/*.{js,css,html,svg,png,jpg,jpeg,gif,webp}'],
         
-        // Don't precache audio files (too large), cache them on-demand
-        globIgnores: ['**/audio/**/*']
+        // Don't precache audio files (too large) or clear-cache.html (needs to be fresh)
+        globIgnores: ['**/audio/**/*', '**/clear-cache.html']
       },
       
       devOptions: {
