@@ -10,7 +10,11 @@ export default function PreloadAudio() {
   const [progress, setProgress] = useState({ current: 0, total: 0 });
   const [isComplete, setIsComplete] = useState(false);
 
-  // Get all audio files from config
+  /**
+   * Collects all unique audio file paths from the configuration.
+   * Includes walkups, sounds, songs, pregame background options, and pregame audio.
+   * @returns {string[]} Array of unique audio file paths
+   */
   const getAudioFiles = () => {
     const audioFiles = [];
     
@@ -25,6 +29,11 @@ export default function PreloadAudio() {
     return [...new Set(audioFiles)];
   };
 
+  /**
+   * Preloads all audio files by fetching them, which triggers the service worker to cache them.
+   * Displays progress as files are downloaded and tracks success/failure counts.
+   * Reports completion metrics to Google Analytics.
+   */
   const preloadAudio = async () => {
     setIsPreloading(true);
     setIsComplete(false);
@@ -76,8 +85,9 @@ export default function PreloadAudio() {
     console.log(`Preload complete: ${successCount} cached, ${failCount} failed`);
   };
 
-  const percentage = progress.total > 0 
-    ? Math.round((progress.current / progress.total) * 100) 
+  // Calculate preload progress percentage for display
+  const percentage = progress.total > 0
+    ? Math.round((progress.current / progress.total) * 100)
     : 0;
 
   if (isComplete) {

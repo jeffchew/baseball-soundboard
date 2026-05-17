@@ -6,6 +6,11 @@ import MusicTab from './components/MusicTab';
 import StopButton from './components/StopButton';
 import { usePlayCount } from './hooks/usePlayCount';
 
+/**
+ * Main application component for the Baseball Soundboard.
+ * Manages tab navigation, audio playback state, and play count tracking.
+ * Integrates Google Analytics for tracking user interactions.
+ */
 function App() {
   const [activeTab, setActiveTab] = useState('lineup');
   const [isPlaying, setIsPlaying] = useState(false);

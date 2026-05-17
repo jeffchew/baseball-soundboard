@@ -47,6 +47,10 @@ export default function LineupTab({ isPlaying, setIsPlaying }) {
     pregameBackgroundOptions.find((song) => song.id === selectedPregameSongId) ??
     pregameBackgroundOptions[0];
 
+  /**
+   * Toggles the enabled/disabled state of a player in the lineup.
+   * @param {string} playerId - The unique identifier of the player to toggle
+   */
   const togglePlayer = (playerId) => {
     setEnabledPlayers(prev => ({
       ...prev,
@@ -54,11 +58,19 @@ export default function LineupTab({ isPlaying, setIsPlaying }) {
     }));
   };
 
+  /**
+   * Initiates the player reordering mode by creating a temporary copy of the current order.
+   * This allows users to drag and drop players to change their lineup order.
+   */
   const startReordering = () => {
     setIsReordering(true);
     setTempOrder([...playerOrder]);
   };
 
+  /**
+   * Saves the reordered player lineup and exits reordering mode.
+   * Commits the temporary order to the persistent player order state.
+   */
   const saveOrder = () => {
     setPlayerOrder([...tempOrder]);
     setIsReordering(false);
@@ -67,6 +79,10 @@ export default function LineupTab({ isPlaying, setIsPlaying }) {
     setDragOffset({ x: 0, y: 0 });
   };
 
+  /**
+   * Cancels the reordering operation and reverts to the original player order.
+   * Clears all drag-related state without saving changes.
+   */
   const cancelReordering = () => {
     setIsReordering(false);
     setTempOrder([]);
@@ -75,6 +91,12 @@ export default function LineupTab({ isPlaying, setIsPlaying }) {
     setDragOffset({ x: 0, y: 0 });
   };
 
+  /**
+   * Handles the start of a drag operation for reordering players.
+   * Captures the initial position and sets up drag state for both mouse and touch events.
+   * @param {MouseEvent|TouchEvent} e - The mouse or touch event that initiated the drag
+   * @param {number} index - The index of the player being dragged in the current order
+   */
   const handleDragStart = (e, index) => {
     e.preventDefault();
     const touch = e.touches?.[0] || e;
@@ -90,6 +112,12 @@ export default function LineupTab({ isPlaying, setIsPlaying }) {
     setDragOffset({ x: 0, y: 0 });
   };
 
+  /**
+   * Handles the drag movement as the user moves a player card.
+   * Updates the visual position of the dragged element and determines which position
+   * the player would be dropped into based on cursor/touch position.
+   * @param {MouseEvent|TouchEvent} e - The mouse or touch move event
+   */
   const handleDragMove = (e) => {
     if (draggedIndex === null) return;
     e.preventDefault();
@@ -119,6 +147,11 @@ export default function LineupTab({ isPlaying, setIsPlaying }) {
     }
   };
 
+  /**
+   * Handles the end of a drag operation when the user releases the player card.
+   * Performs the actual reordering by swapping the dragged player with the drop target.
+   * @param {MouseEvent|TouchEvent} e - The mouse or touch end event
+   */
   const handleDragEnd = (e) => {
     e.preventDefault();
     
@@ -135,6 +168,11 @@ export default function LineupTab({ isPlaying, setIsPlaying }) {
     setDragOffset({ x: 0, y: 0 });
   };
 
+  /**
+   * Handles clicking on a player card to play their walk-up music.
+   * Prevents playback if audio is already playing and tracks the event in Google Analytics.
+   * @param {Object} player - The player object containing file path, label, and other metadata
+   */
   const handlePlayerClick = (player) => {
     if (isPlaying) return;
     
@@ -175,6 +213,17 @@ export default function LineupTab({ isPlaying, setIsPlaying }) {
     };
   };
 
+  /**
+   * Starts the complete pregame lineup introduction sequence.
+   * This includes:
+   * 1. Playing background music for 15 seconds
+   * 2. Playing the Lake Monsters team intro
+   * 3. Playing each enabled player's introduction in order
+   * 4. Playing the closing intro message
+   *
+   * The sequence can be stopped at any time and will properly clean up audio.
+   * Uses a sequence ID to prevent race conditions if a new sequence is started.
+   */
   const startLineupSequence = async () => {
     if (isSequencing) return;
     
@@ -391,6 +440,10 @@ export default function LineupTab({ isPlaying, setIsPlaying }) {
     setCurrentPlayerIndex(-1);
   };
 
+  /**
+   * Immediately stops the pregame lineup sequence.
+   * Halts all audio playback (foreground and background) and resets sequence state.
+   */
   const handleStopSequence = () => {
     stopRequested.current = true;
     

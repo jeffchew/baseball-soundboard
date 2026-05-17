@@ -5,6 +5,12 @@ import { useAudioCache } from '../hooks/useAudioCache';
 export default function SoundboardTab({ isPlaying, setIsPlaying, incrementPlayCount, getPlayCount }) {
   const { isCached } = useAudioCache();
 
+  /**
+   * Handles clicking on a sound button to play the selected sound effect.
+   * Prevents playback if audio is already playing and tracks the event in Google Analytics.
+   * Supports initial delay for Bluetooth speaker wake-up.
+   * @param {Object} sound - The sound object containing file path, label, and metadata
+   */
   const handleSoundClick = (sound) => {
     if (isPlaying) return;
     
@@ -45,6 +51,12 @@ export default function SoundboardTab({ isPlaying, setIsPlaying, incrementPlayCo
     };
   };
 
+  /**
+   * Plays a random sound from the specified category.
+   * Prioritizes unplayed sounds, but falls back to all sounds if all have been played.
+   * For "at-bat" category, excludes situational sounds (two strikes and strikeouts).
+   * @param {string} category - The category to select a random sound from
+   */
   const handleRandomSound = (category) => {
     if (isPlaying) return;
     
@@ -70,7 +82,13 @@ export default function SoundboardTab({ isPlaying, setIsPlaying, incrementPlayCo
     handleSoundClick(randomSound);
   };
 
-  // Get count of unplayed sounds by category
+  /**
+   * Gets the count of unplayed sounds in a specific category.
+   * Used to display remaining sounds in the random button.
+   * For "at-bat" category, excludes situational sounds from the count.
+   * @param {string} category - The category to count unplayed sounds for
+   * @returns {number} The number of unplayed sounds in the category
+   */
   const getUnplayedCount = (category) => {
     let sounds = audioConfig.sounds.filter(sound => sound.category === category);
     

@@ -1,5 +1,13 @@
-// Singleton Audio Engine with fade controls
+/**
+ * Singleton Audio Engine with fade controls for managing audio playback.
+ * Handles foreground audio (songs, sounds, walkups) and background music with smooth fading.
+ * Supports sequence playback with stop callbacks and audio type tracking for confirmation dialogs.
+ */
 class AudioEngine {
+  /**
+   * Creates or returns the singleton AudioEngine instance.
+   * Initializes audio state including active audio, background audio, and fade intervals.
+   */
   constructor() {
     if (AudioEngine.instance) {
       return AudioEngine.instance;
@@ -16,7 +24,11 @@ class AudioEngine {
     AudioEngine.instance = this;
   }
 
-  // Initialize audio context (required for mobile browsers)
+  /**
+   * Initializes the audio context by playing a silent audio clip.
+   * Required for mobile browsers to unlock audio playback.
+   * @returns {Promise<boolean>} True if initialization succeeded, false otherwise
+   */
   async initialize() {
     if (this.isInitialized) return true;
     
@@ -34,7 +46,19 @@ class AudioEngine {
     }
   }
 
-  // Play audio with optional fade-in and start time
+  /**
+   * Plays an audio file with optional fade-in, start time, and initial delay.
+   * Automatically stops any currently playing audio before starting new playback.
+   * Supports Bluetooth speaker wake-up with initial delay feature.
+   * @param {string} file - Path to the audio file to play
+   * @param {Object} options - Playback options
+   * @param {number} [options.startTime=0] - Time in seconds to start playback from
+   * @param {boolean} [options.fadeIn=false] - Whether to fade in the audio
+   * @param {boolean} [options.isSequence=false] - Whether this is part of a sequence
+   * @param {string} [options.audioType=null] - Type of audio: 'song', 'pregame', 'anthem', 'walkup', 'sound'
+   * @param {number} [options.initialDelay=0] - Delay in seconds before starting playback (for Bluetooth wake-up)
+   * @returns {HTMLAudioElement|Object} The audio element or a proxy object if using initial delay
+   */
   play(file, options = {}) {
     const { startTime = 0, fadeIn = false, isSequence = false, audioType = null, initialDelay = 0 } = options;
     
@@ -124,7 +148,11 @@ class AudioEngine {
     }
   }
 
-  // Smooth stop with fade-out
+  /**
+   * Stops the currently playing audio with a smooth fade-out.
+   * Triggers any registered sequence stop callback.
+   * @param {number} [duration=500] - Fade-out duration in milliseconds
+   */
   stop() {
     // Call sequence stop callback if registered
     if (this.sequenceStopCallback) {
@@ -144,27 +172,46 @@ class AudioEngine {
     }
   }
 
-  // Get current audio type
+  /**
+   * Gets the type of currently playing audio.
+   * @returns {string|null} The audio type ('song', 'pregame', 'anthem', 'walkup', 'sound') or null
+   */
   getCurrentAudioType() {
     return this.currentAudioType;
   }
 
-  // Check if current audio requires confirmation to stop
+  /**
+   * Checks if the currently playing audio requires user confirmation before stopping.
+   * Long-form audio types (songs, pregame, anthem) require confirmation.
+   * @returns {boolean} True if confirmation is required, false otherwise
+   */
   requiresStopConfirmation() {
     return ['song', 'pregame', 'anthem'].includes(this.currentAudioType);
   }
 
-  // Register a callback to stop sequences
+  /**
+   * Registers a callback function to be called when a sequence is stopped.
+   * Used to coordinate stopping multi-step audio sequences.
+   * @param {Function} callback - Function to call when sequence is stopped
+   */
   setSequenceStopCallback(callback) {
     this.sequenceStopCallback = callback;
   }
 
-  // Clear sequence stop callback
+  /**
+   * Clears the registered sequence stop callback.
+   */
   clearSequenceStopCallback() {
     this.sequenceStopCallback = null;
   }
 
-  // Fade in audio over specified duration
+  /**
+   * Gradually increases audio volume from 0 to target volume over specified duration.
+   * Uses 60 steps for smooth fading.
+   * @param {HTMLAudioElement} audio - The audio element to fade in
+   * @param {number} targetVolume - Target volume level (0.0 to 1.0)
+   * @param {number} duration - Fade duration in milliseconds
+   */
   fadeIn(audio, targetVolume, duration) {
     if (this.fadeInterval) {
       clearInterval(this.fadeInterval);
@@ -186,7 +233,13 @@ class AudioEngine {
     }, stepDuration);
   }
 
-  // Fade out audio over specified duration
+  /**
+   * Gradually decreases audio volume to 0 over specified duration.
+   * Uses 30 steps for smooth fading.
+   * @param {HTMLAudioElement} audio - The audio element to fade out
+   * @param {number} duration - Fade duration in milliseconds
+   * @param {Function} [callback] - Optional callback to execute when fade completes
+   */
   fadeOut(audio, duration, callback) {
     if (this.fadeInterval) {
       clearInterval(this.fadeInterval);
@@ -210,7 +263,14 @@ class AudioEngine {
     }, stepDuration);
   }
 
-  // Play background music at specified volume
+  /**
+   * Plays looping background music at specified volume with fade-in.
+   * Automatically stops any currently playing background music.
+   * @param {string} file - Path to the background music file
+   * @param {number} [volume=0.3] - Target volume level (0.0 to 1.0)
+   * @param {number} [startTime=0] - Time in seconds to start playback from
+   * @returns {HTMLAudioElement} The background audio element
+   */
   playBackground(file, volume = 0.3, startTime = 0) {
     if (this.backgroundAudio) {
       this.stopBackground();
@@ -226,21 +286,34 @@ class AudioEngine {
     return this.backgroundAudio;
   }
 
-  // Duck background music (reduce volume)
+  /**
+   * Reduces background music volume (ducking) to make foreground audio more prominent.
+   * @param {number} [targetVolume=0.1] - Target volume level (0.0 to 1.0)
+   * @param {number} [duration=500] - Fade duration in milliseconds
+   */
   duckBackground(targetVolume = 0.1, duration = 500) {
     if (this.backgroundAudio) {
       this.fadeBackgroundTo(targetVolume, duration);
     }
   }
 
-  // Restore background music volume
+  /**
+   * Restores background music volume to normal level after ducking.
+   * @param {number} [targetVolume=0.3] - Target volume level (0.0 to 1.0)
+   * @param {number} [duration=500] - Fade duration in milliseconds
+   */
   restoreBackground(targetVolume = 0.3, duration = 500) {
     if (this.backgroundAudio) {
       this.fadeBackgroundTo(targetVolume, duration);
     }
   }
 
-  // Fade background to specific volume
+  /**
+   * Fades background music to a specific volume level.
+   * Used internally by duckBackground and restoreBackground.
+   * @param {number} targetVolume - Target volume level (0.0 to 1.0)
+   * @param {number} duration - Fade duration in milliseconds
+   */
   fadeBackgroundTo(targetVolume, duration) {
     if (this.backgroundFadeInterval) {
       clearInterval(this.backgroundFadeInterval);
@@ -264,7 +337,9 @@ class AudioEngine {
     }, stepDuration);
   }
 
-  // Stop background music
+  /**
+   * Stops background music with a smooth fade-out.
+   */
   stopBackground() {
     if (this.backgroundAudio) {
       this.fadeOut(this.backgroundAudio, 500, () => {
@@ -277,12 +352,18 @@ class AudioEngine {
     }
   }
 
-  // Check if audio is currently playing
+  /**
+   * Checks if foreground audio is currently playing.
+   * @returns {boolean} True if audio is playing, false otherwise
+   */
   isPlaying() {
     return this.activeAudio !== null && !this.activeAudio.paused;
   }
 
-  // Get current audio element
+  /**
+   * Gets the currently active foreground audio element.
+   * @returns {HTMLAudioElement|null} The active audio element or null if none is playing
+   */
   getCurrentAudio() {
     return this.activeAudio;
   }

@@ -5,6 +5,11 @@ import { useAudioCache } from '../hooks/useAudioCache';
 export default function MusicTab({ isPlaying, setIsPlaying, incrementPlayCount, getPlayCount }) {
   const { isCached } = useAudioCache();
 
+  /**
+   * Handles clicking on a song button to play the selected song.
+   * Prevents playback if audio is already playing and tracks the event in Google Analytics.
+   * @param {Object} song - The song object containing file path, label, and metadata
+   */
   const handleSongClick = (song) => {
     if (isPlaying) return;
     
@@ -44,6 +49,11 @@ export default function MusicTab({ isPlaying, setIsPlaying, incrementPlayCount, 
     };
   };
 
+  /**
+   * Plays a random song from the specified category.
+   * Prioritizes unplayed songs, but falls back to all songs if all have been played.
+   * @param {string} category - The category to select a random song from
+   */
   const handleRandomSong = (category) => {
     if (isPlaying) return;
     
@@ -63,7 +73,12 @@ export default function MusicTab({ isPlaying, setIsPlaying, incrementPlayCount, 
     handleSongClick(randomSong);
   };
 
-  // Get count of unplayed songs by category
+  /**
+   * Gets the count of unplayed songs in a specific category.
+   * Used to display remaining songs in the random button.
+   * @param {string} category - The category to count unplayed songs for
+   * @returns {number} The number of unplayed songs in the category
+   */
   const getUnplayedCount = (category) => {
     const songs = audioConfig.songs.filter(song => song.category === category);
     return songs.filter(song => getPlayCount(song.id) === 0).length;

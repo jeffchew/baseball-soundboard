@@ -4,6 +4,16 @@ import { useServiceWorker } from '../hooks/useServiceWorker';
 import { useDeviceDetection } from '../hooks/useDeviceDetection';
 import { audioConfig } from '../config';
 
+/**
+ * Header component with tab navigation, audio initialization, and offline caching controls.
+ * Displays preload button, offline status, and provides access to settings and national anthem.
+ * @param {Object} props
+ * @param {string} props.activeTab - Currently active tab ('lineup', 'soundboard', or 'music')
+ * @param {Function} props.setActiveTab - Function to change the active tab
+ * @param {boolean} props.isPlaying - Whether audio is currently playing
+ * @param {Function} props.setIsPlaying - Function to update playing state
+ * @param {Function} props.resetPlayCounts - Function to reset all play count tracking
+ */
 export default function Header({ activeTab, setActiveTab, isPlaying, setIsPlaying, resetPlayCounts }) {
   const [isInitialized, setIsInitialized] = useState(false);
   const [isPreloading, setIsPreloading] = useState(false);
@@ -11,6 +21,10 @@ export default function Header({ activeTab, setActiveTab, isPlaying, setIsPlayin
   const { status, offlineReady, audioCacheCount } = useServiceWorker();
   const { isIOS } = useDeviceDetection();
 
+  /**
+   * Initializes the audio engine for iOS devices.
+   * Required to unlock audio playback on iOS due to browser restrictions.
+   */
   const handleInitialize = async () => {
     const success = await audioEngine.initialize();
     if (success) {
@@ -18,6 +32,11 @@ export default function Header({ activeTab, setActiveTab, isPlaying, setIsPlayin
     }
   };
 
+  /**
+   * Preloads all audio files for offline use by fetching them into the browser cache.
+   * Displays progress as files are downloaded and cached by the service worker.
+   * Includes walkups, sounds, songs, and pregame audio files.
+   */
   const handlePreload = async () => {
     setIsPreloading(true);
     
@@ -50,6 +69,11 @@ export default function Header({ activeTab, setActiveTab, isPlaying, setIsPlayin
     console.log(`Preload complete: ${successCount} files cached`);
   };
 
+  /**
+   * Clears all cached audio files and resets the service worker.
+   * Prompts for confirmation before clearing cache and reloading the page.
+   * Useful for forcing fresh downloads of updated audio files.
+   */
   const handleClearCache = async () => {
     if (confirm('Clear all cached audio files and reset the app? This will fetch fresh versions of all files. You will need to preload again for offline use.')) {
       try {
@@ -88,6 +112,10 @@ export default function Header({ activeTab, setActiveTab, isPlaying, setIsPlayin
     }
   };
 
+  /**
+   * Plays the national anthem audio file.
+   * Prevents playback if audio is already playing and tracks the event in Google Analytics.
+   */
   const handlePlayAnthem = () => {
     if (isPlaying) return;
     
@@ -126,6 +154,10 @@ export default function Header({ activeTab, setActiveTab, isPlaying, setIsPlayin
     };
   };
 
+  /**
+   * Resets all play count tracking after user confirmation.
+   * Clears the play count data from localStorage and tracks the reset in Google Analytics.
+   */
   const handleResetPlayCounts = () => {
     if (confirm('Reset all play counts? This will clear the play count tracking for all audio files.')) {
       resetPlayCounts();
@@ -141,12 +173,14 @@ export default function Header({ activeTab, setActiveTab, isPlaying, setIsPlayin
     }
   };
 
+  // Tab configuration for navigation
   const tabs = [
     { id: 'lineup', label: 'Lineup' },
     { id: 'soundboard', label: 'Soundboard' },
     { id: 'music', label: 'Music' },
   ];
 
+  // Determine which UI state to show based on service worker and preload status
   const showPreloadButton = !offlineReady && !isPreloading && (status === 'ready' || status === 'online');
   const showOfflineReady = offlineReady;
   const percentage = progress.total > 0 ? Math.round((progress.current / progress.total) * 100) : 0;

@@ -44,7 +44,10 @@ export function usePlayCount() {
     }
   }, [playCounts]);
 
-  // Increment play count for a specific file
+  /**
+   * Increments the play count for a specific audio file.
+   * @param {string} fileId - The unique identifier of the audio file
+   */
   const incrementPlayCount = useCallback((fileId) => {
     setPlayCounts(prev => ({
       ...prev,
@@ -52,19 +55,29 @@ export function usePlayCount() {
     }));
   }, []);
 
-  // Get play count for a specific file
+  /**
+   * Gets the current play count for a specific audio file.
+   * @param {string} fileId - The unique identifier of the audio file
+   * @returns {number} The number of times the file has been played (0 if never played)
+   */
   const getPlayCount = useCallback((fileId) => {
     return playCounts[fileId] || 0;
   }, [playCounts]);
 
-  // Reset all play counts
+  /**
+   * Resets all play counts to zero and clears localStorage.
+   * Used to start fresh tracking after 24 hours or manual reset.
+   */
   const resetPlayCounts = useCallback(() => {
     setPlayCounts({});
     localStorage.removeItem(STORAGE_KEY);
     localStorage.removeItem(TIMESTAMP_KEY);
   }, []);
 
-  // Reset play count for a specific file
+  /**
+   * Resets the play count for a specific audio file to zero.
+   * @param {string} fileId - The unique identifier of the audio file
+   */
   const resetPlayCount = useCallback((fileId) => {
     setPlayCounts(prev => {
       const newCounts = { ...prev };

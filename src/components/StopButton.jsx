@@ -2,9 +2,19 @@ import { useState } from 'react';
 import audioEngine from '../utils/audioEngine';
 import StopConfirmationModal from './StopConfirmationModal';
 
+/**
+ * Fixed stop button component that appears at the bottom of the screen.
+ * Shows a confirmation modal for long-form audio (songs, pregame, anthem).
+ * @param {Object} props
+ * @param {Function} props.setIsPlaying - Function to update the playing state
+ */
 export default function StopButton({ setIsPlaying }) {
   const [showConfirmation, setShowConfirmation] = useState(false);
 
+  /**
+   * Handles the stop button click.
+   * Shows confirmation modal for long-form audio, otherwise stops immediately.
+   */
   const handleStopClick = () => {
     // Check if current audio requires confirmation
     if (audioEngine.requiresStopConfirmation()) {
@@ -14,6 +24,10 @@ export default function StopButton({ setIsPlaying }) {
     }
   };
 
+  /**
+   * Performs the actual stop operation.
+   * Stops both foreground and background audio and updates playing state.
+   */
   const performStop = () => {
     audioEngine.stop();
     audioEngine.stopBackground();
@@ -21,6 +35,9 @@ export default function StopButton({ setIsPlaying }) {
     setShowConfirmation(false);
   };
 
+  /**
+   * Cancels the stop operation and closes the confirmation modal.
+   */
   const handleCancel = () => {
     setShowConfirmation(false);
   };

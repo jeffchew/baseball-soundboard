@@ -1,3 +1,11 @@
+/**
+ * Modal dialog that confirms the user wants to stop long-form audio playback.
+ * Displays over the main content with a backdrop and provides Cancel/Stop options.
+ * @param {Object} props
+ * @param {boolean} props.isOpen - Whether the modal is currently visible
+ * @param {Function} props.onConfirm - Callback when user confirms stop action
+ * @param {Function} props.onCancel - Callback when user cancels stop action
+ */
 export default function StopConfirmationModal({ isOpen, onConfirm, onCancel }) {
   if (!isOpen) return null;
 
