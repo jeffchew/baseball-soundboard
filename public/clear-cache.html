@@ -160,17 +160,29 @@
         log('🔄 Resetting play counts...');
         
         // Clear play count data from localStorage
-        const keys = Object.keys(localStorage);
-        const playCountKeys = keys.filter(key => key.startsWith('playCount_'));
+        const playCountKey = 'baseball-soundboard-playcounts';
+        const timestampKey = 'baseball-soundboard-playcounts-timestamp';
         
-        log(`Found ${playCountKeys.length} play count entries`);
+        let clearedCount = 0;
         
-        playCountKeys.forEach(key => {
-          localStorage.removeItem(key);
-          log(`✅ Cleared: ${key}`);
-        });
+        if (localStorage.getItem(playCountKey)) {
+          localStorage.removeItem(playCountKey);
+          log(`✅ Cleared: ${playCountKey}`);
+          clearedCount++;
+        }
         
-        log('✨ Play counts reset successfully!');
+        if (localStorage.getItem(timestampKey)) {
+          localStorage.removeItem(timestampKey);
+          log(`✅ Cleared: ${timestampKey}`);
+          clearedCount++;
+        }
+        
+        if (clearedCount === 0) {
+          log('ℹ️ No play count data found');
+        } else {
+          log(`✨ Play counts reset successfully! (${clearedCount} entries cleared)`);
+        }
+        
         status.className = 'status success';
         
         setTimeout(() => {
@@ -268,9 +280,9 @@
         log(`Active service workers: ${registrations.length}`);
         
         // Show play count info
-        const keys = Object.keys(localStorage);
-        const playCountKeys = keys.filter(key => key.startsWith('playCount_'));
-        log(`Play count entries: ${playCountKeys.length}`);
+        const playCountKey = 'baseball-soundboard-playcounts';
+        const hasPlayCounts = localStorage.getItem(playCountKey) !== null;
+        log(`Play count data: ${hasPlayCounts ? 'Present' : 'None'}`);
       } catch (error) {
         log(`Error checking status: ${error.message}`, true);
       }
