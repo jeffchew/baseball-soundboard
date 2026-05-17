@@ -192,6 +192,7 @@ export const audioConfig = {
     { id: 'song44', label: 'Welcome To The Jungle', file: audioUrl('/audio/songs/welcome-to-the-jungle.mp3'), startTime: 0, fadeIn: true },
     { id: 'song39', label: 'Thunderstruck', file: audioUrl('/audio/songs/thunderstruck.mp3'), startTime: 0, fadeIn: true },
     { id: 'song21', label: 'Jump Around', file: audioUrl('/audio/songs/jump-around.mp3'), startTime: 0, fadeIn: true },
+    { id: 'song14', label: 'Enter Sandman', file: audioUrl('/audio/songs/enter-sandman.mp3'), startTime: 0, fadeIn: true },
   ],
 
   // Background loops for pregame announcements (player intros)
