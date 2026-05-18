@@ -68,4 +68,4 @@ rm -f src/config.js.tmp
 echo "Config file updated successfully!"
 echo "Backup saved as src/config.js.backup"
 
-# Made with Bob
+

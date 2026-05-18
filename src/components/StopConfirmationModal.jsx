@@ -45,4 +45,4 @@ export default function StopConfirmationModal({ isOpen, onConfirm, onCancel }) {
   );
 }
 
-// Made with Bob
+

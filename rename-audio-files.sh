@@ -52,4 +52,4 @@ done
 echo "All audio files have been renamed!"
 echo "Changes are staged in git. Review with 'git status' and commit when ready."
 
-# Made with Bob
+
