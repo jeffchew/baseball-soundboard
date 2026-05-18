@@ -56,7 +56,6 @@ export default defineConfig({
               cacheableResponse: {
                 statuses: [0, 200, 206] // Include 206 for range requests
               },
-              networkTimeoutSeconds: 10, // Longer timeout for initial network fetch
               // Critical: RangeRequestsPlugin for Safari/iOS audio support
               plugins: [
                 {
@@ -78,7 +77,6 @@ export default defineConfig({
               cacheableResponse: {
                 statuses: [0, 200, 206]
               },
-              networkTimeoutSeconds: 10, // Longer timeout for initial network fetch
               rangeRequests: true
             }
           },
