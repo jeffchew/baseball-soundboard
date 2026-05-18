@@ -50,6 +50,7 @@ class AudioEngine {
    * Plays an audio file with optional fade-in, start time, and initial delay.
    * Automatically stops any currently playing audio before starting new playback.
    * Supports Bluetooth speaker wake-up with initial delay feature.
+   * Includes retry logic for failed audio loads.
    * @param {string} file - Path to the audio file to play
    * @param {Object} options - Playback options
    * @param {number} [options.startTime=0] - Time in seconds to start playback from
@@ -57,10 +58,11 @@ class AudioEngine {
    * @param {boolean} [options.isSequence=false] - Whether this is part of a sequence
    * @param {string} [options.audioType=null] - Type of audio: 'song', 'pregame', 'anthem', 'walkup', 'sound'
    * @param {number} [options.initialDelay=0] - Delay in seconds before starting playback (for Bluetooth wake-up)
+   * @param {number} [options.retryCount=0] - Internal retry counter (do not set manually)
    * @returns {HTMLAudioElement|Object} The audio element or a proxy object if using initial delay
    */
   play(file, options = {}) {
-    const { startTime = 0, fadeIn = false, isSequence = false, audioType = null, initialDelay = 0 } = options;
+    const { startTime = 0, fadeIn = false, isSequence = false, audioType = null, initialDelay = 0, retryCount = 0 } = options;
     
     // Store the audio type for confirmation checks
     this.currentAudioType = audioType;
@@ -85,19 +87,48 @@ class AudioEngine {
       this.activeAudio = null;
     }
     
-    // Helper function to start playback
+    // Helper function to start playback with retry logic
     const startPlayback = () => {
       // Create new audio element
       this.activeAudio = new Audio(file);
       this.activeAudio.currentTime = startTime;
       
+      // Add error handler with retry logic (max 3 retries)
+      this.activeAudio.addEventListener('error', (e) => {
+        console.error(`Audio load error (attempt ${retryCount + 1}/3):`, e);
+        
+        if (retryCount < 2) {
+          console.log(`Retrying audio load in ${(retryCount + 1) * 500}ms...`);
+          setTimeout(() => {
+            // Retry with incremented counter
+            this.play(file, { ...options, retryCount: retryCount + 1 });
+          }, (retryCount + 1) * 500); // Exponential backoff: 500ms, 1000ms
+        } else {
+          console.error('Audio load failed after 3 attempts');
+          // Clear the failed audio
+          if (this.activeAudio) {
+            this.activeAudio = null;
+            this.currentAudioType = null;
+          }
+        }
+      });
+      
+      // Add stalled handler for network issues
+      this.activeAudio.addEventListener('stalled', () => {
+        console.warn('Audio playback stalled, attempting to resume...');
+      });
+      
       if (fadeIn) {
         this.activeAudio.volume = 0;
-        this.activeAudio.play();
+        this.activeAudio.play().catch(err => {
+          console.error('Play failed:', err);
+        });
         this.fadeIn(this.activeAudio, 1.0, 1200);
       } else {
         this.activeAudio.volume = 1.0;
-        this.activeAudio.play();
+        this.activeAudio.play().catch(err => {
+          console.error('Play failed:', err);
+        });
       }
       
       return this.activeAudio;
