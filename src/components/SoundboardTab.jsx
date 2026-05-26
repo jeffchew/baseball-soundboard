@@ -2,7 +2,7 @@ import { audioConfig } from '../config';
 import audioEngine from '../utils/audioEngine';
 import { useAudioCache } from '../hooks/useAudioCache';
 
-export default function SoundboardTab({ isPlaying, setIsPlaying, incrementPlayCount, getPlayCount }) {
+export default function SoundboardTab({ isPlaying, setIsPlaying, incrementPlayCount, getPlayCount, categoryRefs }) {
   const { isCached } = useAudioCache();
 
   /**
@@ -155,7 +155,11 @@ export default function SoundboardTab({ isPlaying, setIsPlaying, incrementPlayCo
         if (sounds.length === 0) return null;
 
         return (
-          <div key={categoryKey} className="mb-8">
+          <div
+            key={categoryKey}
+            ref={(el) => (categoryRefs.current[categoryKey] = el)}
+            className="mb-8"
+          >
             <div className="mb-3 flex items-center justify-between">
               <div>
                 <h3 className="text-xl font-bold text-white">{categoryInfo.title}</h3>

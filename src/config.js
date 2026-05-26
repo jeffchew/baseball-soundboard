@@ -30,6 +30,7 @@ export const audioConfig = {
   sounds: [
     // At Bat - Short clips for during at-bats
     { id: 'addams-family', label: 'Addams Family', file: audioUrl('/audio/sounds/addams-family-theme.mp3'), startTime: 0, fadeIn: false, category: 'at-bat', initialDelay: 0.75 },
+    { id: 'darth-vader', label: 'Darth Vader', file: audioUrl('/audio/sounds/darth-vader.mp3'), startTime: 0, fadeIn: false, category: 'at-bat', initialDelay: 0.75 },
     { id: 'imperial', label: 'Two Strikes', file: audioUrl('/audio/sounds/imperial-siren.mp3'), startTime: 0, fadeIn: false, category: 'at-bat', initialDelay: 0.75 },
     { id: 'mario-coin-atbat', label: 'Mario Coin', file: audioUrl('/audio/sounds/mario-coin.mp3'), startTime: 0, fadeIn: false, category: 'at-bat', initialDelay: 0.75 },
     { id: 'slide-whistle', label: 'Slide Whistle 1', file: audioUrl('/audio/sounds/slide-whistle.mp3'), startTime: 0, fadeIn: false, category: 'at-bat', initialDelay: 0.75 },

@@ -17,6 +17,7 @@ import { audioConfig } from '../config';
 export default function Header({ activeTab, setActiveTab, isPlaying, setIsPlaying, resetPlayCounts }) {
   const [isInitialized, setIsInitialized] = useState(false);
   const [isPreloading, setIsPreloading] = useState(false);
+  const [showSettingsModal, setShowSettingsModal] = useState(false);
   const [progress, setProgress] = useState({ current: 0, total: 0 });
   const { status, offlineReady, audioCacheCount } = useServiceWorker();
   const { isIOS } = useDeviceDetection();
@@ -180,149 +181,164 @@ export default function Header({ activeTab, setActiveTab, isPlaying, setIsPlayin
     { id: 'music', label: 'Music' },
   ];
 
-  // Determine which UI state to show based on service worker and preload status
-  const showPreloadButton = !offlineReady && !isPreloading && (status === 'ready' || status === 'online');
-  const showOfflineReady = offlineReady;
   const percentage = progress.total > 0 ? Math.round((progress.current / progress.total) * 100) : 0;
 
   return (
-    <header className="sticky top-0 z-50 bg-yankee-navy border-b-2 border-yankee-slate shadow-lg">
-      <div className="px-4 py-3">
-        {/* Initialize Audio Button - Only for iOS devices */}
-        {!isInitialized && isIOS && (
-          <div className="mb-3">
-            <button
-              onClick={handleInitialize}
-              className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-lg shadow-lg transition-colors duration-200"
-            >
-              🔊 Initialize Audio (iPhone Users)
-            </button>
-          </div>
-        )}
-
-        {/* Preload Button */}
-        {showPreloadButton && (
-          <div className="mb-3 flex items-center gap-2">
-            <img
-              src="/lake-monsters-logo.png"
-              alt="Lake Monsters Logo"
-              className="h-12 w-auto flex-shrink-0"
-            />
-            <div className="flex-1">
+    <>
+      <header className="sticky top-0 z-50 bg-yankee-navy border-b-2 border-yankee-slate shadow-lg">
+        <div className="px-4 py-3">
+          {/* Initialize Audio Button - Only for iOS devices */}
+          {!isInitialized && isIOS && (
+            <div className="mb-3">
               <button
-                onClick={handlePreload}
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg shadow-lg transition-colors duration-200"
+                onClick={handleInitialize}
+                className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-lg shadow-lg transition-colors duration-200"
               >
-                📥 Preload All Audio for Offline Use
+                🔊 Initialize Audio (iPhone Users)
               </button>
-              {audioCacheCount > 0 && (
-                <div className="mt-2 text-center text-sm text-blue-300">
-                  {audioCacheCount} files already cached
-                </div>
-              )}
             </div>
-            <a
-              href="/clear-cache.html"
-              className="flex-shrink-0 font-bold py-3 px-4 rounded-lg shadow-lg transition-colors duration-200 bg-gray-600 hover:bg-gray-700 text-white inline-block"
-              title="Cache & Settings"
-            >
-              🔧
-            </a>
-            <button
-              onClick={handlePlayAnthem}
-              disabled={isPlaying}
-              className={`flex-shrink-0 font-bold py-3 px-4 rounded-lg shadow-lg transition-colors duration-200 ${
-                isPlaying
-                  ? 'bg-yankee-gray text-yankee-light cursor-not-allowed opacity-50'
-                  : 'bg-red-600 hover:bg-red-700 text-white'
-              }`}
-              title="Play National Anthem"
-            >
-              🇺🇸
-            </button>
-          </div>
-        )}
+          )}
 
-        {/* Preloading Progress */}
-        {isPreloading && (
-          <div className="mb-3 bg-blue-600 text-white rounded-lg p-4 shadow-lg">
-            <div className="flex items-center justify-between mb-2">
-              <span className="font-bold">Preloading Audio...</span>
-              <span className="text-sm">{percentage}%</span>
-            </div>
-            <div className="w-full bg-blue-800 rounded-full h-2 mb-2">
-              <div
-                className="bg-white h-2 rounded-full transition-all duration-300"
-                style={{ width: `${percentage}%` }}
+          {/* Top Row: Logo + Tabs */}
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => setShowSettingsModal(true)}
+              className="flex-shrink-0 hover:opacity-80 transition-opacity"
+              title="Settings & Controls"
+            >
+              <img
+                src="/lake-monsters-logo.png"
+                alt="Lake Monsters Logo"
+                className="h-12 w-auto"
               />
-            </div>
-            <div className="text-xs opacity-90">
-              {progress.current} of {progress.total} files
+            </button>
+            
+            {/* Tab Navigation */}
+            <div className="flex-1 flex gap-2">
+              {tabs.map((tab) => (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`flex-1 py-3 px-4 font-bold rounded-lg transition-all duration-200 ${
+                    activeTab === tab.id
+                      ? 'bg-white text-yankee-navy shadow-lg'
+                      : 'bg-yankee-slate text-white hover:bg-yankee-gray'
+                  }`}
+                >
+                  {tab.label}
+                </button>
+              ))}
             </div>
           </div>
-        )}
-
-        {showOfflineReady && (
-          <div className="mb-3 flex items-center gap-2">
-            <img
-              src="/lake-monsters-logo.png"
-              alt="Lake Monsters Logo"
-              className="h-12 w-auto flex-shrink-0"
-            />
-            <div className="flex-1 bg-green-600 text-white rounded-lg p-3 shadow-lg">
-              <div className="flex items-center justify-center gap-2 font-bold mb-1">
-                <span>📶</span>
-                <span>Offline Ready</span>
-                <span className="relative flex h-2 w-2 flex-shrink-0">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
-                </span>
-              </div>
-              <div className="text-center text-xs opacity-90">
-                {audioCacheCount} files cached • Ready for game day!
-              </div>
-            </div>
-            <a
-              href="/clear-cache.html"
-              className="flex-shrink-0 font-bold py-3 px-4 rounded-lg shadow-lg transition-colors duration-200 bg-gray-600 hover:bg-gray-700 text-white inline-block"
-              title="Cache & Settings"
-            >
-              🔧
-            </a>
-            <button
-              onClick={handlePlayAnthem}
-              disabled={isPlaying}
-              className={`flex-shrink-0 font-bold py-3 px-4 rounded-lg shadow-lg transition-colors duration-200 ${
-                isPlaying
-                  ? 'bg-yankee-gray text-yankee-light cursor-not-allowed opacity-50'
-                  : 'bg-red-600 hover:bg-red-700 text-white'
-              }`}
-              title="Play National Anthem"
-            >
-              🇺🇸
-            </button>
-          </div>
-        )}
-
-
-        {/* Tab Navigation */}
-        <div className="flex gap-2">
-          {tabs.map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`flex-1 py-3 px-4 font-bold rounded-lg transition-all duration-200 ${
-                activeTab === tab.id
-                  ? 'bg-white text-yankee-navy shadow-lg'
-                  : 'bg-yankee-slate text-white hover:bg-yankee-gray'
-              }`}
-            >
-              {tab.label}
-            </button>
-          ))}
         </div>
-      </div>
-    </header>
+      </header>
+
+      {/* Settings Modal */}
+      {showSettingsModal && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 p-4" onClick={() => setShowSettingsModal(false)}>
+          <div className="bg-yankee-navy border-2 border-yankee-slate rounded-lg shadow-2xl max-w-md w-full max-h-[80vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+            <div className="sticky top-0 bg-yankee-navy border-b border-yankee-slate px-6 py-4 flex items-center justify-between">
+              <h2 className="text-xl font-bold text-white">Settings & Controls</h2>
+              <button
+                onClick={() => setShowSettingsModal(false)}
+                className="text-white hover:text-yankee-light text-2xl leading-none"
+              >
+                ×
+              </button>
+            </div>
+            
+            <div className="p-6 space-y-4">
+              {/* Offline Status */}
+              <div>
+                <h3 className="text-lg font-bold text-white mb-2">Offline Mode</h3>
+                {offlineReady ? (
+                  <div className="bg-green-600 text-white rounded-lg p-4">
+                    <div className="flex items-center justify-center gap-2 font-bold mb-1">
+                      <span>📶</span>
+                      <span>Offline Ready</span>
+                    </div>
+                    <div className="text-center text-sm opacity-90">
+                      {audioCacheCount} files cached • Ready for game day!
+                    </div>
+                  </div>
+                ) : isPreloading ? (
+                  <div className="bg-blue-600 text-white rounded-lg p-4">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="font-bold">Preloading Audio...</span>
+                      <span className="text-sm">{percentage}%</span>
+                    </div>
+                    <div className="w-full bg-blue-800 rounded-full h-2 mb-2">
+                      <div
+                        className="bg-white h-2 rounded-full transition-all duration-300"
+                        style={{ width: `${percentage}%` }}
+                      />
+                    </div>
+                    <div className="text-xs opacity-90">
+                      {progress.current} of {progress.total} files
+                    </div>
+                  </div>
+                ) : (
+                  <>
+                    <button
+                      onClick={handlePreload}
+                      className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg shadow-lg transition-colors duration-200"
+                    >
+                      📥 Preload All Audio for Offline Use
+                    </button>
+                    {audioCacheCount > 0 && (
+                      <div className="mt-2 text-center text-sm text-blue-300">
+                        {audioCacheCount} files already cached
+                      </div>
+                    )}
+                  </>
+                )}
+              </div>
+
+              {/* National Anthem */}
+              <div>
+                <h3 className="text-lg font-bold text-white mb-2">National Anthem</h3>
+                <button
+                  onClick={() => {
+                    handlePlayAnthem();
+                    setShowSettingsModal(false);
+                  }}
+                  disabled={isPlaying}
+                  className={`w-full font-bold py-3 px-4 rounded-lg shadow-lg transition-colors duration-200 ${
+                    isPlaying
+                      ? 'bg-yankee-gray text-yankee-light cursor-not-allowed opacity-50'
+                      : 'bg-red-600 hover:bg-red-700 text-white'
+                  }`}
+                >
+                  🇺🇸 Play National Anthem
+                </button>
+              </div>
+
+              {/* Advanced Settings */}
+              <div>
+                <h3 className="text-lg font-bold text-white mb-2">Advanced</h3>
+                <div className="space-y-2">
+                  <a
+                    href="/clear-cache.html"
+                    className="block w-full bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 px-4 rounded-lg shadow-lg transition-colors duration-200 text-center"
+                  >
+                    🔧 Cache & Settings
+                  </a>
+                  <button
+                    onClick={() => {
+                      handleResetPlayCounts();
+                      setShowSettingsModal(false);
+                    }}
+                    className="w-full bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-3 px-4 rounded-lg shadow-lg transition-colors duration-200"
+                  >
+                    🔄 Reset Play Counts
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 }
 
