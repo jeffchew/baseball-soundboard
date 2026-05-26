@@ -1,29 +1,18 @@
 import { useState, useEffect, useCallback } from 'react';
 
 const STORAGE_KEY = 'baseball-soundboard-playcounts';
-const TIMESTAMP_KEY = 'baseball-soundboard-playcounts-timestamp';
-const ONE_DAY_MS = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
 
 /**
  * Custom hook to manage play counts for audio files
- * Persists data in localStorage and auto-clears after 24 hours
+ * Persists data in localStorage indefinitely until manually cleared
  */
 export function usePlayCount() {
   const [playCounts, setPlayCounts] = useState(() => {
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
-      const timestamp = localStorage.getItem(TIMESTAMP_KEY);
       
-      // Check if data exists and is less than 24 hours old
-      if (stored && timestamp) {
-        const age = Date.now() - parseInt(timestamp, 10);
-        if (age < ONE_DAY_MS) {
-          return JSON.parse(stored);
-        } else {
-          // Data is older than 24 hours, clear it
-          localStorage.removeItem(STORAGE_KEY);
-          localStorage.removeItem(TIMESTAMP_KEY);
-        }
+      if (stored) {
+        return JSON.parse(stored);
       }
       
       return {};
@@ -37,8 +26,6 @@ export function usePlayCount() {
   useEffect(() => {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(playCounts));
-      // Update timestamp whenever we save
-      localStorage.setItem(TIMESTAMP_KEY, Date.now().toString());
     } catch (error) {
       console.error('Failed to save play counts:', error);
     }
@@ -66,12 +53,11 @@ export function usePlayCount() {
 
   /**
    * Resets all play counts to zero and clears localStorage.
-   * Used to start fresh tracking after 24 hours or manual reset.
+   * Used for manual reset only.
    */
   const resetPlayCounts = useCallback(() => {
     setPlayCounts({});
     localStorage.removeItem(STORAGE_KEY);
-    localStorage.removeItem(TIMESTAMP_KEY);
   }, []);
 
   /**
