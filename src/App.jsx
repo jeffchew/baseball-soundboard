@@ -13,11 +13,34 @@ import { useLastBatter } from './hooks/useLastBatter';
  * Integrates Google Analytics for tracking user interactions.
  */
 function App() {
+  const [showSoundsTab, setShowSoundsTab] = useState(() => {
+    try {
+      const stored = localStorage.getItem('baseball-soundboard-show-sounds-tab');
+      return stored === null ? true : stored === 'true';
+    } catch (error) {
+      console.error('Error loading sounds tab preference from localStorage:', error);
+      return true;
+    }
+  });
   const [activeTab, setActiveTab] = useState('lineup');
   const [isPlaying, setIsPlaying] = useState(false);
   const { incrementPlayCount, getPlayCount, resetPlayCounts } = usePlayCount();
   const [lastBatterId, setLastBatterId, clearLastBatter] = useLastBatter();
   const categoryRefs = useRef({});
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('baseball-soundboard-show-sounds-tab', String(showSoundsTab));
+    } catch (error) {
+      console.error('Error saving sounds tab preference to localStorage:', error);
+    }
+  }, [showSoundsTab]);
+
+  useEffect(() => {
+    if (!showSoundsTab && activeTab === 'soundboard') {
+      setActiveTab('lineup');
+    }
+  }, [showSoundsTab, activeTab]);
 
   // Track tab navigation
   useEffect(() => {
@@ -61,10 +84,10 @@ function App() {
 
   return (
     <div className="min-h-screen bg-yankee-navy">
-      <Header activeTab={activeTab} setActiveTab={setActiveTab} isPlaying={isPlaying} setIsPlaying={setIsPlaying} resetPlayCounts={resetPlayCounts} clearLastBatter={clearLastBatter} />
+      <Header activeTab={activeTab} setActiveTab={setActiveTab} isPlaying={isPlaying} setIsPlaying={setIsPlaying} resetPlayCounts={resetPlayCounts} clearLastBatter={clearLastBatter} showSoundsTab={showSoundsTab} setShowSoundsTab={setShowSoundsTab} />
       
       {/* Category Navigation - Only show for soundboard and music tabs */}
-      {(activeTab === 'soundboard' || activeTab === 'music') && (
+      {((showSoundsTab && activeTab === 'soundboard') || activeTab === 'music') && (
         <div className="sticky top-[72px] z-50 bg-yankee-dark/95 backdrop-blur-sm border-b border-yankee-gray/30 px-4 py-3">
           <div className="flex gap-2 overflow-x-auto scrollbar-hide">
             {Object.entries(activeTab === 'soundboard' ? soundCategories : musicCategories).map(([categoryKey, categoryInfo]) => (
@@ -82,7 +105,7 @@ function App() {
       
       <main>
         {activeTab === 'lineup' && <LineupTab isPlaying={isPlaying} setIsPlaying={setIsPlaying} lastBatterId={lastBatterId} setLastBatterId={setLastBatterId} />}
-        {activeTab === 'soundboard' && <SoundboardTab isPlaying={isPlaying} setIsPlaying={setIsPlaying} incrementPlayCount={incrementPlayCount} getPlayCount={getPlayCount} categoryRefs={categoryRefs} />}
+        {showSoundsTab && activeTab === 'soundboard' && <SoundboardTab isPlaying={isPlaying} setIsPlaying={setIsPlaying} incrementPlayCount={incrementPlayCount} getPlayCount={getPlayCount} categoryRefs={categoryRefs} />}
         {activeTab === 'music' && <MusicTab isPlaying={isPlaying} setIsPlaying={setIsPlaying} incrementPlayCount={incrementPlayCount} getPlayCount={getPlayCount} categoryRefs={categoryRefs} />}
       </main>
 

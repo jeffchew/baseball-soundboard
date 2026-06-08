@@ -14,7 +14,7 @@ import { audioConfig } from '../config';
  * @param {Function} props.setIsPlaying - Function to update playing state
  * @param {Function} props.resetPlayCounts - Function to reset all play count tracking
  */
-export default function Header({ activeTab, setActiveTab, isPlaying, setIsPlaying, resetPlayCounts, clearLastBatter }) {
+export default function Header({ activeTab, setActiveTab, isPlaying, setIsPlaying, resetPlayCounts, clearLastBatter, showSoundsTab, setShowSoundsTab }) {
   const [isInitialized, setIsInitialized] = useState(false);
   const [isPreloading, setIsPreloading] = useState(false);
   const [showSettingsModal, setShowSettingsModal] = useState(false);
@@ -196,7 +196,7 @@ export default function Header({ activeTab, setActiveTab, isPlaying, setIsPlayin
   // Tab configuration for navigation
   const tabs = [
     { id: 'lineup', label: 'Lineup' },
-    { id: 'soundboard', label: 'Soundboard' },
+    ...(showSoundsTab ? [{ id: 'soundboard', label: 'Sounds' }] : []),
     { id: 'music', label: 'Music' },
   ];
 
@@ -330,6 +330,32 @@ export default function Header({ activeTab, setActiveTab, isPlaying, setIsPlayin
                 >
                   🇺🇸 Play National Anthem
                 </button>
+              </div>
+
+              {/* Tab Visibility */}
+              <div>
+                <h3 className="text-lg font-bold text-white mb-2">Tabs</h3>
+                <label className="flex items-center justify-between gap-4 rounded-lg bg-yankee-slate px-4 py-3 text-white">
+                  <div>
+                    <div className="font-bold">Show Sounds Tab</div>
+                    <div className="text-sm text-yankee-light">Hide sound effects for games when they are not allowed.</div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setShowSoundsTab(!showSoundsTab)}
+                    className={`relative inline-flex h-7 w-12 items-center rounded-full transition-colors duration-200 ${
+                      showSoundsTab ? 'bg-green-600' : 'bg-yankee-gray'
+                    }`}
+                    aria-pressed={showSoundsTab}
+                    aria-label="Toggle Sounds tab visibility"
+                  >
+                    <span
+                      className={`inline-block h-5 w-5 transform rounded-full bg-white transition-transform duration-200 ${
+                        showSoundsTab ? 'translate-x-6' : 'translate-x-1'
+                      }`}
+                    />
+                  </button>
+                </label>
               </div>
 
               {/* Advanced Settings */}
