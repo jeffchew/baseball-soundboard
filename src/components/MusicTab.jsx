@@ -86,6 +86,12 @@ export default function MusicTab({ isPlaying, setIsPlaying, incrementPlayCount, 
 
   // Category configuration
   const categories = {
+    'new': {
+      title: 'New',
+      description: 'Recently added songs',
+      color: 'bg-purple-600 hover:bg-purple-700',
+      disabledColor: 'bg-purple-800',
+    },
     'upbeat': {
       title: 'Upbeat',
       description: 'High-energy, danceable, feel-good songs',
@@ -125,6 +131,12 @@ export default function MusicTab({ isPlaying, setIsPlaying, incrementPlayCount, 
   };
 
   const songsByCategory = audioConfig.songs.reduce((acc, song) => {
+    // Add to 'new' category if song has new flag
+    if (song.new) {
+      if (!acc['new']) acc['new'] = [];
+      acc['new'].push(song);
+    }
+    // Also add to regular category
     const category = song.category || 'upbeat';
     if (!acc[category]) acc[category] = [];
     acc[category].push(song);
@@ -137,8 +149,8 @@ export default function MusicTab({ isPlaying, setIsPlaying, incrementPlayCount, 
         const songs = songsByCategory[categoryKey] || [];
         if (songs.length === 0) return null;
 
-        // Hide random button for villain, mothers-day, and game-end categories
-        const showRandomButton = categoryKey !== 'villain' && categoryKey !== 'mothers-day' && categoryKey !== 'game-end';
+        // Hide random button for villain, mothers-day, game-end, and new categories
+        const showRandomButton = categoryKey !== 'villain' && categoryKey !== 'mothers-day' && categoryKey !== 'game-end' && categoryKey !== 'new';
 
         return (
           <div
@@ -186,6 +198,15 @@ export default function MusicTab({ isPlaying, setIsPlaying, incrementPlayCount, 
                   >
                     {cached && (
                       <div className="absolute top-2 right-2 w-2 h-2 bg-green-400 rounded-full" title="Cached for offline use" />
+                    )}
+                    {/* New Song Badge - only show outside the "new" category */}
+                    {song.new && categoryKey !== 'new' && (
+                      <div className="absolute top-2 left-2 z-10 pointer-events-none">
+                        <div className="bg-purple-500 text-white font-bold text-xs px-2 py-1 rounded shadow-lg flex items-center gap-1">
+                          <span>✨</span>
+                          <span>NEW</span>
+                        </div>
+                      </div>
                     )}
                     <div className="text-xl">{song.label}</div>
                     {song.artist && (

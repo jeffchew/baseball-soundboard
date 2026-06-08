@@ -75,6 +75,7 @@ function App() {
   };
 
   const musicCategories = {
+    'new': { title: 'New', color: 'bg-purple-600 hover:bg-purple-700' },
     'upbeat': { title: 'Upbeat', color: 'bg-yellow-600 hover:bg-yellow-700' },
     'rock': { title: 'Rock', color: 'bg-red-600 hover:bg-red-700' },
     'hip-hop': { title: 'Hip Hop', color: 'bg-blue-600 hover:bg-blue-700' },
