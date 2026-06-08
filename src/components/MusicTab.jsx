@@ -188,6 +188,11 @@ export default function MusicTab({ isPlaying, setIsPlaying, incrementPlayCount, 
                       <div className="absolute top-2 right-2 w-2 h-2 bg-green-400 rounded-full" title="Cached for offline use" />
                     )}
                     <div className="text-xl">{song.label}</div>
+                    {song.artist && (
+                      <div className="text-sm text-white/70 mt-1">
+                        {song.artist}
+                      </div>
+                    )}
                     {getPlayCount(song.id) > 0 && (
                       <div className="text-sm text-white/80 mt-1">
                         ▶ {getPlayCount(song.id)}
