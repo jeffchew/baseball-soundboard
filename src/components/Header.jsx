@@ -14,7 +14,7 @@ import { audioConfig } from '../config';
  * @param {Function} props.setIsPlaying - Function to update playing state
  * @param {Function} props.resetPlayCounts - Function to reset all play count tracking
  */
-export default function Header({ activeTab, setActiveTab, isPlaying, setIsPlaying, resetPlayCounts }) {
+export default function Header({ activeTab, setActiveTab, isPlaying, setIsPlaying, resetPlayCounts, clearLastBatter }) {
   const [isInitialized, setIsInitialized] = useState(false);
   const [isPreloading, setIsPreloading] = useState(false);
   const [showSettingsModal, setShowSettingsModal] = useState(false);
@@ -171,6 +171,25 @@ export default function Header({ activeTab, setActiveTab, isPlaying, setIsPlayin
       }
       
       alert('Play counts have been reset!');
+    }
+  };
+
+  /**
+   * Clears the last batter tracking after user confirmation.
+   * Removes the indicator showing which player batted last.
+   */
+  const handleClearLastBatter = () => {
+    if (confirm('Clear the last batter indicator?')) {
+      clearLastBatter();
+      
+      // Track in GA4
+      if (window.gtag) {
+        window.gtag('event', 'clear_last_batter', {
+          action: 'manual_clear',
+        });
+      }
+      
+      alert('Last batter indicator has been cleared!');
     }
   };
 
@@ -331,6 +350,15 @@ export default function Header({ activeTab, setActiveTab, isPlaying, setIsPlayin
                     className="w-full bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-3 px-4 rounded-lg shadow-lg transition-colors duration-200"
                   >
                     🔄 Reset Play Counts
+                  </button>
+                  <button
+                    onClick={() => {
+                      handleClearLastBatter();
+                      setShowSettingsModal(false);
+                    }}
+                    className="w-full bg-orange-600 hover:bg-orange-700 text-white font-bold py-3 px-4 rounded-lg shadow-lg transition-colors duration-200"
+                  >
+                    ⚾ Clear Last Batter
                   </button>
                 </div>
               </div>

@@ -5,6 +5,7 @@ import SoundboardTab from './components/SoundboardTab';
 import MusicTab from './components/MusicTab';
 import StopButton from './components/StopButton';
 import { usePlayCount } from './hooks/usePlayCount';
+import { useLastBatter } from './hooks/useLastBatter';
 
 /**
  * Main application component for the Baseball Soundboard.
@@ -15,6 +16,7 @@ function App() {
   const [activeTab, setActiveTab] = useState('lineup');
   const [isPlaying, setIsPlaying] = useState(false);
   const { incrementPlayCount, getPlayCount, resetPlayCounts } = usePlayCount();
+  const [lastBatterId, setLastBatterId, clearLastBatter] = useLastBatter();
   const categoryRefs = useRef({});
 
   // Track tab navigation
@@ -59,7 +61,7 @@ function App() {
 
   return (
     <div className="min-h-screen bg-yankee-navy">
-      <Header activeTab={activeTab} setActiveTab={setActiveTab} isPlaying={isPlaying} setIsPlaying={setIsPlaying} resetPlayCounts={resetPlayCounts} />
+      <Header activeTab={activeTab} setActiveTab={setActiveTab} isPlaying={isPlaying} setIsPlaying={setIsPlaying} resetPlayCounts={resetPlayCounts} clearLastBatter={clearLastBatter} />
       
       {/* Category Navigation - Only show for soundboard and music tabs */}
       {(activeTab === 'soundboard' || activeTab === 'music') && (
@@ -79,7 +81,7 @@ function App() {
       )}
       
       <main>
-        {activeTab === 'lineup' && <LineupTab isPlaying={isPlaying} setIsPlaying={setIsPlaying} />}
+        {activeTab === 'lineup' && <LineupTab isPlaying={isPlaying} setIsPlaying={setIsPlaying} lastBatterId={lastBatterId} setLastBatterId={setLastBatterId} />}
         {activeTab === 'soundboard' && <SoundboardTab isPlaying={isPlaying} setIsPlaying={setIsPlaying} incrementPlayCount={incrementPlayCount} getPlayCount={getPlayCount} categoryRefs={categoryRefs} />}
         {activeTab === 'music' && <MusicTab isPlaying={isPlaying} setIsPlaying={setIsPlaying} incrementPlayCount={incrementPlayCount} getPlayCount={getPlayCount} categoryRefs={categoryRefs} />}
       </main>

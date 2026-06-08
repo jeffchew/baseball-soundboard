@@ -5,7 +5,7 @@ import { useAudioCache } from '../hooks/useAudioCache';
 import { usePlayerState } from '../hooks/usePlayerState';
 import { usePlayerOrder } from '../hooks/usePlayerOrder';
 
-export default function LineupTab({ isPlaying, setIsPlaying }) {
+export default function LineupTab({ isPlaying, setIsPlaying, lastBatterId, setLastBatterId }) {
   const { isCached } = useAudioCache();
   const [isSequencing, setIsSequencing] = useState(false);
   const [currentPlayerIndex, setCurrentPlayerIndex] = useState(-1);
@@ -177,6 +177,9 @@ export default function LineupTab({ isPlaying, setIsPlaying }) {
     if (isPlaying) return;
     
     setIsPlaying(true);
+    
+    // Set this player as the last batter
+    setLastBatterId(player.id);
     
     const playStartTime = Date.now();
     
@@ -623,6 +626,16 @@ export default function LineupTab({ isPlaying, setIsPlaying }) {
                 />
               </label>
             </div>
+            
+            {/* Last Batter Indicator - positioned above button */}
+            {!isReordering && lastBatterId === player.id && (
+              <div className="absolute top-2 left-2 z-10 pointer-events-none">
+                <div className="bg-yellow-500 text-yankee-navy font-bold text-xs px-2 py-1 rounded shadow-lg flex items-center gap-1">
+                  <span>⚾</span>
+                  <span>LAST UP</span>
+                </div>
+              </div>
+            )}
             
             {/* Player Button */}
             <button
