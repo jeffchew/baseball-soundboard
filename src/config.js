@@ -157,6 +157,7 @@ export const audioConfig = {
     { id: 'song26', label: "No Sleep 'Til Brooklyn", artist: 'Beastie Boys', file: audioUrl('/audio/songs/no-sleep-til-brooklyn.mp3'), startTime: 0, fadeIn: false, category: 'rock' },
     { id: 'song25c', label: "Nothin' But a Good Time", artist: 'Poison', file: audioUrl('/audio/songs/nothin-but-a-good-time.mp3'), startTime: 0, fadeIn: false, category: 'rock' },
     { id: 'song65', label: "Nuthin' but a 'G' Thang", artist: 'Dr. Dre ft. Snoop Dogg', file: audioUrl('/audio/songs/nuthin-but-a-g-thang.mp3'), startTime: 0, fadeIn: false, category: 'hip-hop', new: true },
+    { id: 'song69', label: 'Panama', artist: 'Van Halen', file: audioUrl('/audio/songs/panama.mp3'), startTime: 0, fadeIn: false, category: 'rock', new: true },
     { id: 'song27', label: 'Paradise City', artist: "Guns N' Roses", file: audioUrl('/audio/songs/paradise-city.mp3'), startTime: 0, fadeIn: false, category: 'rock' },
     { id: 'song27a1', label: 'Pour Some Sugar on Me', artist: 'Def Leppard', file: audioUrl('/audio/songs/pour-some-sugar-on-me.mp3'), startTime: 0, fadeIn: false, category: 'rock' },
     { id: 'song27a', label: 'Raise Your Glass', artist: 'P!nk', file: audioUrl('/audio/songs/raise-your-glass.mp3'), startTime: 0, fadeIn: false, category: 'upbeat' },
@@ -217,6 +218,7 @@ export const audioConfig = {
     { id: 'song39', label: 'Thunderstruck', file: audioUrl('/audio/songs/thunderstruck.mp3'), startTime: 0, fadeIn: true },
     { id: 'song21', label: 'Jump Around', file: audioUrl('/audio/songs/jump-around.mp3'), startTime: 0, fadeIn: true },
     { id: 'song14', label: 'Enter Sandman', file: audioUrl('/audio/songs/enter-sandman.mp3'), startTime: 0, fadeIn: true },
+    { id: 'song69', label: 'Panama', file: audioUrl('/audio/songs/panama.mp3'), startTime: 0, fadeIn: true },
   ],
 
   // Background loops for pregame announcements (player intros)
